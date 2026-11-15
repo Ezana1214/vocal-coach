@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0C0907">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>Vocal Coach</title>
+<style>
+:root{
+  --bg:#0C0907;--card:#1D1610;--border:rgba(201,149,42,.14);
+  --gold:#C9952A;--gl:#E5B347;--text:#EDE4CF;
+  --t2:#9B8A6E;--t3:#7A6B58;--teal:#35B589;--coral:#D96040;--violet:#A8A0E8;
+  --r:14px;--rs:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:-apple-system,'SF Pro Text',Roboto,'Helvetica Neue',sans-serif;background:var(--bg);color:var(--text);max-width:520px;margin:0 auto;min-height:100vh;padding-bottom:calc(72px + env(safe-area-inset-bottom,16px))}
+body::before{content:'';position:fixed;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:320px;background:radial-gradient(ellipse,rgba(201,149,42,.07) 0%,transparent 70%);pointer-events:none;z-index:0}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:flex;background:rgba(12,9,7,.97);border-top:.5px solid rgba(201,149,42,.12);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:100;padding-bottom:env(safe-area-inset-bottom,0px)}
+.nb{flex:1;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;background:none;border:none;color:var(--t3);font-family:inherit;transition:color .2s;min-height:52px}
+.nb.on{color:var(--gold)}
+.nb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.nb span{font-size:9px;letter-spacing:.07em;text-transform:uppercase}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 18px 0;position:relative;z-index:1}
+.brand{font-family:Georgia,serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+.streak{display:flex;align-items:center;gap:5px;background:rgba(201,149,42,.1);border:.5px solid rgba(201,149,42,.22);border-radius:99px;padding:5px 13px;font-size:13px;font-weight:600;color:var(--gl)}
+.page{display:none;padding:16px 18px;position:relative;z-index:1}
+.page.on{display:block;animation:fi .2s ease}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:.5px solid var(--border);border-radius:var(--r);padding:15px;margin-bottom:12px}
+.ctitle{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:11px;font-family:Georgia,serif}
+.hero{border-radius:var(--r);padding:20px;margin-bottom:12px;border:.5px solid var(--border);position:relative;overflow:hidden}
+.htag{font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.hname{font-family:Georgia,serif;font-size:20px;margin-bottom:4px}
+.hsub{font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.5}
+.pbar{height:5px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.pfill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.16,1,.3,1)}
+.s3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.scard{background:var(--card);border:.5px solid var(--border);border-radius:var(--rs);padding:11px 8px;text-align:center}
+.sv{font-family:Georgia,serif;font-size:22px;color:var(--gl);line-height:1;margin-bottom:3px}
+.sl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3)}
+.btn{width:100%;padding:15px;border-radius:var(--r);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;border:none;transition:all .18s;min-height:50px}
+.btn-gold{background:var(--gold);color:#0C0907}
+.btn-gold:active{transform:scale(.97);opacity:.88}
+.btn-ghost{background:rgba(255,255,255,.05);color:var(--t2);border:.5px solid rgba(255,255,255,.09)}
+.btn-ghost:active{opacity:.65}
+.btn-sm{padding:10px 18px;border-radius:99px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;border:none;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;min-height:40px}
+.btn-sm-gold{background:var(--gold);color:#0C0907}
+.btn-sm-ghost{background:rgba(255,255,255,.06);color:var(--t2);border:.5px solid rgba(255,255,255,.1)}
+.btn-rec{background:var(--coral)!important;color:#fff!important}
+.mini{min-height:30px;padding:4px 11px;font-size:10px}
+.link{background:none;border:none;color:var(--t2);font-family:inherit;font-size:12px;text-decoration:underline;cursor:pointer;padding:8px;display:block;margin:0 auto}
+.dots-row{display:flex;gap:5px;margin-bottom:14px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.08);transition:all .25s;flex-shrink:0}
+.dot.cur{border-radius:3px;width:20px}
+.ex-card{background:var(--card);border:.5px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:12px}
+.ex-cat{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:8px}
+.ex-icon{font-size:40px;margin-bottom:10px;line-height:1}
+.ex-name{font-family:Georgia,serif;font-size:22px;margin-bottom:3px}
+.ex-sub{font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5}
+.ex-steps{margin-bottom:14px}
+.ex-step{display:flex;gap:10px;padding:5px 0;border-bottom:.5px solid rgba(255,255,255,.03)}
+.ex-step:last-child{border-bottom:none}
+.ex-sn{font-family:Georgia,serif;color:var(--gold);font-size:13px;flex-shrink:0;min-width:18px;padding-top:1px}
+.ex-st{flex:1;font-size:13px;line-height:1.6}
+.ex-tip{display:flex;gap:8px;background:rgba(201,149,42,.06);border:.5px solid rgba(201,149,42,.14);border-radius:var(--rs);padding:10px 12px;font-size:12px;color:var(--t2);line-height:1.55}
+.badge{display:inline-flex;align-items:center;gap:4px;border-radius:99px;padding:3px 10px;font-size:11px;margin:0 6px 10px 0}
+.badge-v{background:rgba(139,131,232,.12);border:.5px solid rgba(139,131,232,.3);color:var(--violet)}
+.badge-g{background:rgba(201,149,42,.1);border:.5px solid rgba(201,149,42,.3);color:var(--gl)}
+.badge-t{background:rgba(53,181,137,.1);border:.5px solid rgba(53,181,137,.3);color:#6ED2AA}
+.badge-n{background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.12);color:var(--t2)}
+.rule{display:flex;gap:8px;align-items:flex-start;background:rgba(139,131,232,.08);border:.5px solid rgba(139,131,232,.25);border-radius:var(--rs);padding:9px 12px;font-size:12px;color:#BDB6F2;line-height:1.5;margin-bottom:12px}
+.adapt{background:rgba(53,181,137,.07);border:.5px solid rgba(53,181,137,.2);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:12px;color:rgba(110,210,170,.95);line-height:1.6}
+.warnbox{background:rgba(217,96,64,.08);border:.5px solid rgba(217,96,64,.3);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:12px;color:#F09A80;line-height:1.6}
+.goldbox{background:rgba(201,149,42,.07);border:.5px solid rgba(201,149,42,.3);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px;font-size:12px;color:#E5B347;line-height:1.6}
+.run-card{background:var(--card);border:.5px solid var(--border);border-radius:var(--r);padding:18px 18px 14px;margin-bottom:12px}
+.run-name{font-family:Georgia,serif;font-size:18px;margin-bottom:1px}
+.run-sub{font-size:11px;color:var(--t3);margin-bottom:14px}
+.note-tracker{margin-bottom:12px;background:rgba(0,0,0,.25);border-radius:var(--rs);padding:14px 16px}
+.note-name-big{font-family:Georgia,serif;font-size:48px;color:var(--gl);text-align:center;line-height:1;min-height:52px}
+.note-solf{font-size:12px;color:var(--t2);text-align:center;margin:4px 0 10px;min-height:15px}
+.note-bar-wrap{position:relative;height:40px}
+.note-bar-track{position:absolute;top:16px;left:10px;right:10px;height:6px;background:rgba(255,255,255,.07);border-radius:99px}
+.note-bar-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,rgba(139,131,232,.5),var(--gold));border-radius:99px;transition:width .22s cubic-bezier(.16,1,.3,1)}
+.note-bar-dot{position:absolute;top:-9px;width:24px;height:24px;border-radius:50%;background:var(--gold);transform:translateX(-50%);transition:left .22s cubic-bezier(.16,1,.3,1);box-shadow:0 0 16px rgba(201,149,42,.65);left:0}
+.pmark{position:absolute;top:-6px;width:2px;height:18px;background:var(--coral);transform:translateX(-50%);opacity:.8}
+.pmark-l{position:absolute;top:16px;font-size:9px;color:var(--coral);transform:translateX(-50%);white-space:nowrap;letter-spacing:.05em}
+.note-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);padding:0 6px;margin-top:4px}
+.cue{font-family:Georgia,serif;font-size:19px;line-height:1.45;text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center;padding:16px 10px;background:rgba(0,0,0,.25);border-radius:var(--rs);margin-bottom:6px;transition:opacity .3s}
+.cue-next{font-size:11px;color:var(--t3);text-align:center;margin-bottom:12px;min-height:14px}
+.tuner{display:none;background:rgba(0,0,0,.25);border-radius:var(--rs);padding:10px 14px;margin-bottom:12px}
+.tuner.on{display:block}
+.tun-row{display:flex;align-items:center;gap:12px}
+.tun-note{font-family:Georgia,serif;font-size:28px;min-width:62px}
+.tun-info{flex:1;font-size:12px;color:var(--t2);line-height:1.45}
+.tun-cents{font-weight:700}
+.vol{margin-top:8px}
+.vol-lbl{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.vol-track{position:relative;height:8px;border-radius:99px;background:linear-gradient(90deg,rgba(53,181,137,.28) 0 var(--ok),rgba(217,96,64,.28) var(--ok) 100%);overflow:hidden}
+.vol-fill{position:absolute;top:0;left:0;height:100%;width:0;border-radius:99px;background:var(--teal);transition:width .08s linear}
+.sound-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:rgba(0,0,0,.2);border-radius:var(--rs)}
+.sound-lbl{font-size:11px;color:var(--t3);letter-spacing:.06em;text-transform:uppercase;flex:1}
+.breath-indicator{font-size:11px;color:var(--teal);letter-spacing:.06em;text-transform:uppercase;opacity:0;transition:opacity .3s;font-weight:700}
+.breath-indicator.show{opacity:1}
+.timer{font-family:Georgia,serif;font-size:56px;text-align:center;line-height:1;margin-bottom:6px;transition:color .3s;font-variant-numeric:tabular-nums}
+.timer.warn{color:var(--coral)}
+.tbar{height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden;margin-bottom:8px}
+.tfill{height:100%;border-radius:99px;transition:width .95s linear,background .4s}
+.sess-left{font-size:11px;color:var(--t3);text-align:center;margin-bottom:12px}
+.run-btns{display:flex;gap:8px}
+.rating-card{background:var(--card);border:.5px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:12px;text-align:center}
+.rating-q{font-size:14px;font-weight:600;margin:10px 0 14px}
+.diff-row{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:6px}
+.diff-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 4px 10px;border-radius:12px;border:1.5px solid rgba(255,255,255,.07);background:transparent;cursor:pointer;font-family:inherit;transition:all .15s;min-height:72px}
+.diff-emoji{font-size:24px;line-height:1}
+.diff-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.03em;line-height:1.3;text-align:center}
+.diff-btn.on{transform:scale(1.05);background:rgba(201,149,42,.14);border-color:rgba(201,149,42,.5)}
+.diff-scale{display:flex;justify-content:space-between;font-size:10px;color:var(--t3);padding:0 2px;margin-bottom:16px}
+.mets{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin:14px 0 4px}
+.met{background:rgba(0,0,0,.25);border-radius:var(--rs);padding:10px 6px}
+.met b{display:block;font-family:Georgia,serif;font-size:22px;font-weight:400;line-height:1.1}
+.met span{font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--t3)}
+.cel-wrap{text-align:center;padding:22px 0 10px}
+.cel-icon{font-size:48px;margin-bottom:8px}
+.cel-title{font-family:Georgia,serif;font-size:22px;margin-bottom:6px}
+.cel-sub{font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5}
+.q-block{margin-bottom:16px}
+.q-lbl{font-size:13px;font-weight:600;margin-bottom:9px;line-height:1.4}
+.q-opts{display:flex;flex-wrap:wrap;gap:7px}
+.qo{padding:10px 14px;border-radius:99px;border:.5px solid rgba(255,255,255,.1);background:transparent;cursor:pointer;font-size:13px;color:var(--t2);font-family:inherit;transition:all .15s;min-height:42px}
+.qo.on{border-color:var(--gold);background:rgba(201,149,42,.12);color:var(--text)}
+.big-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px;border-radius:var(--r);border:.5px solid rgba(255,255,255,.1);background:var(--card);color:var(--text);font-family:inherit;font-size:14px;cursor:pointer;margin-bottom:10px;min-height:58px}
+.big-opt small{display:block;font-size:11px;color:var(--t3);margin-top:2px}
+.big-opt span.e{font-size:26px}
+textarea{width:100%;background:rgba(255,255,255,.04);border:.5px solid rgba(255,255,255,.09);border-radius:var(--rs);padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;resize:none;outline:none;margin-top:6px}
+.song-hero{border-radius:var(--r);padding:18px;background:linear-gradient(135deg,rgba(53,181,137,.07),rgba(53,181,137,.01));border:.5px solid rgba(53,181,137,.2);margin-bottom:12px}
+.song-big{font-family:Georgia,serif;font-size:18px;margin-bottom:4px}
+.inp-row{display:flex;gap:8px;margin-bottom:8px}
+input[type=text]{flex:1;min-width:0;width:100%;background:rgba(255,255,255,.05);border:.5px solid rgba(255,255,255,.1);border-radius:var(--rs);padding:12px 13px;color:var(--text);font-size:14px;font-family:inherit;outline:none;min-height:46px}
+select{background:#241b13;border:.5px solid rgba(255,255,255,.12);border-radius:var(--rs);padding:10px;color:var(--text);font-size:14px;font-family:inherit;min-height:44px;width:100%}
+input[type=range]{width:100%;accent-color:var(--gold)}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.flbl{font-size:11px;color:var(--t2);margin-bottom:5px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:13px;padding:7px 0;border-bottom:.5px solid rgba(255,255,255,.04)}
+.kv:last-child{border-bottom:none}
+.kv b{color:var(--gl);font-family:Georgia,serif;font-weight:400}
+.rec-item{padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.05)}
+.rec-item:last-child{border-bottom:none}
+.rec-top{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:13px}
+audio{width:100%;height:36px;margin-top:6px}
+.ph-row{display:flex;align-items:center;gap:10px;padding:7px 0}
+.ph-num{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0C0907;flex-shrink:0}
+.ph-info{flex:1;font-size:13px}
+.ph-info small{display:block;font-size:11px;color:var(--t3)}
+.jentry{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.04)}
+.jentry:last-child{border-bottom:none}
+.jdot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.jinfo{flex:1}.jtitle{font-size:13px;margin-bottom:2px}.jsub{font-size:11px;color:var(--t3);line-height:1.45}
+.jdate{font-size:11px;color:var(--t3);white-space:nowrap}
+.trend{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:12px}
+.trend span:first-child{flex:1;color:var(--t2)}
+.trend-bar{width:90px;height:6px;border-radius:99px;background:rgba(255,255,255,.06);overflow:hidden}
+.trend-bar div{height:100%;background:var(--teal);border-radius:99px}
+.trend b{width:34px;text-align:right;color:var(--text);font-weight:600}
+.chart{margin-bottom:14px}
+.chart-h{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--t2);margin-bottom:4px}
+.chart-h b{font-family:Georgia,serif;font-weight:400;font-size:16px;color:var(--text)}
+.chart svg{width:100%;height:54px;display:block}
+.rest{text-align:center;padding:40px 20px}
+.rest-icon{font-size:52px;margin-bottom:14px}
+.rest-title{font-family:Georgia,serif;font-size:22px;margin-bottom:8px}
+.rest-sub{font-size:13px;color:var(--t2);line-height:1.6}
+.overlay{position:fixed;inset:0;background:var(--bg);z-index:900;overflow-y:auto;display:none;padding:22px 18px 40px}
+.overlay-in{max-width:520px;margin:0 auto}
+.ob-icon{font-size:56px;margin:30px 0 16px;text-align:center}
+.ob-title{font-family:Georgia,serif;font-size:26px;margin-bottom:10px;text-align:center}
+.ob-sub{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:22px;text-align:center}
+.t-big{font-family:Georgia,serif;font-size:54px;color:var(--gl);text-align:center;line-height:1}
+.t-solf{text-align:center;font-size:12px;color:var(--t2);margin:4px 0 12px}
+.t-adj{display:flex;gap:6px;margin-bottom:12px}
+.t-adj .btn-sm{flex:1;min-width:0;padding:10px 4px;font-size:11px;letter-spacing:.02em}
+.t-live{text-align:center;font-size:13px;color:var(--t2);min-height:20px;margin-bottom:12px}
+.song-row{padding:10px 0;border-bottom:.5px solid rgba(255,255,255,.05)}
+.song-row:last-child{border-bottom:none}
+.song-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.toast{position:fixed;bottom:calc(84px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%) translateY(80px);background:var(--gold);color:#0C0907;padding:9px 20px;border-radius:99px;font-size:12px;font-weight:700;letter-spacing:.04em;transition:transform .3s cubic-bezier(.16,1,.3,1);z-index:1000;pointer-events:none;max-width:90%;text-align:center;visibility:hidden}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:rgba(201,149,42,.15);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="hdr"><div class="brand">Vocal Coach</div><div class="streak">🔥 <span id="sk">0</span></div></div>
+<nav class="nav">
+  <button class="nb on" data-t="auj" onclick="sw('auj')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Auj.</span></button>
+  <button class="nb" data-t="wkt" onclick="sw('wkt')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg><span>Séance</span></button>
+  <button class="nb" data-t="prg" onclick="sw('prg')"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Progrès</span></button>
+  <button class="nb" data-t="jnl" onclick="sw('jnl')"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span>Journal</span></button>
+</nav>
+<div class="page on" id="page-auj"></div>
+<div class="page" id="page-wkt"></div>
+<div class="page" id="page-prg"></div>
+<div class="page" id="page-jnl"></div>
+<div class="overlay" id="ov"><div class="overlay-in" id="ov-in"></div></div>
+<input type="file" id="imp" accept="application/json,.json" style="display:none" onchange="importData(this.files[0]);this.value=''">
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════
+// NOTES & OUTILS
+// ═══════════════════════════════════
+const NN=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const SOLF=['Do','Do♯','Ré','Ré♯','Mi','Fa','Fa♯','Sol','Sol♯','La','La♯','Si'];
+function n2m(n){const r=/^([A-G]#?)(-?\d)$/.exec(n||'');return r?NN.indexOf(r[1])+12*(+r[2]+1):60;}
+function m2n(m){m=Math.round(m);return NN[((m%12)+12)%12]+(Math.floor(m/12)-1);}
+function m2s(m){m=Math.round(m);return SOLF[((m%12)+12)%12]+(Math.floor(m/12)-1);}
+function m2f(m){return 440*Math.pow(2,(m-69)/12);}
+function f2m(f){return 69+12*Math.log2(f/440);}
+function fold(d){return((d%12)+18)%12-6;}
+function range(a,b){const o=[],s=a<=b?1:-1;for(let x=a;s>0?x<=b:x>=b;x+=s)o.push(x);return o;}
+function pingpong(a,b){const out=range(a,b);for(let i=out.length-2;i>0;i--)out.push(out[i]);return out;}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function median(a){if(!a.length)return null;const s=[...a].sort((x,y)=>x-y);return s[Math.floor(s.length/2)];}
+function mean(a){return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
+function sd(a){const m=mean(a);return Math.sqrt(mean(a.map(x=>(x-m)*(x-m))));}
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function h2r(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)].join(',');}
+function todayStr(d){d=d||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function daysBetween(a,b){const p=s=>{const[y,m,d]=s.split('-').map(Number);return Date.UTC(y,m-1,d);};return Math.round((p(b)-p(a))/864e5);}
+function fmtD(iso){return new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short'});}
+function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+
+// ═══════════════════════════════════
+// ÉTAT & STOCKAGE
+// ═══════════════════════════════════
+const K='vc3:';
+const LS={g(k,d){try{const v=localStorage.getItem(K+k);return v?JSON.parse(v):d}catch(e){return d}},s(k,v){try{localStorage.setItem(K+k,JSON.stringify(v))}catch(e){}},d(k){try{localStorage.removeItem(K+k)}catch(e){}}};
+const VOICE_DEFAULT={low:'E2',chestMax:'F4',passage:'F#4',falsMax:'D#5',test:null,refDb:null};
+const SET_DEFAULT={vol:.8,click:true,tts:true,hp:true,lat:0,live:'auto',micId:''};
+let VOICE={...VOICE_DEFAULT},VH=[],PROG=null,ST={streak:0,last:null,total:0},SESSIONS=[],SONGS=[],CUR=null,PITCH={},RATINGS={},TEMPO={},
+    NOTICE=null,MICPREF=false,LASTREC=null,LASTEXP=null,PRE=null,SET={...SET_DEFAULT};
+function load(){VOICE={...VOICE_DEFAULT,...LS.g('voice',{})};VH=LS.g('vh',[]);PROG=LS.g('prog',null);ST=LS.g('st',ST);SESSIONS=LS.g('se',[]);SONGS=LS.g('songs',[]);CUR=LS.g('cur',null);
+  PITCH=LS.g('pitch',{});RATINGS=LS.g('ratings',{});TEMPO=LS.g('tempo',{});NOTICE=LS.g('notice',null);MICPREF=LS.g('mic',false);LASTREC=LS.g('lastrec',null);LASTEXP=LS.g('lastexp',null);PRE=LS.g('pre',null);SET={...SET_DEFAULT,...LS.g('set',{})};}
+function save(){LS.s('voice',VOICE);LS.s('vh',VH);LS.s('prog',PROG);LS.s('st',ST);LS.s('se',SESSIONS.slice(0,500));LS.s('songs',SONGS);LS.s('cur',CUR);LS.s('pitch',PITCH);LS.s('ratings',RATINGS);LS.s('tempo',TEMPO);
+  LS.s('notice',NOTICE);LS.s('mic',MICPREF);LS.s('lastrec',LASTREC);LS.s('lastexp',LASTEXP);LS.s('pre',PRE);LS.s('set',SET);}
+function curSong(){return SONGS.find(s=>s.id===CUR)||null;}
+function curStreak(){return ST.last&&daysBetween(ST.last,todayStr())<=2?ST.streak:0;}
+
+// ═══════════════════════════════════
+// MOTEUR AUDIO
+// ═══════════════════════════════════
+const PART=[[1,1],[2,.5],[3,.3],[4,.18],[5,.1],[6,.06]];
+const Aud={
+  ctx:null,master:null,nodes:[],sched:null,tos:[],onNote:null,lo:48,hi:72,tl:[],nid:0,pos:0,
+  init(){if(!this.ctx){this.ctx=new(window.AudioContext||window.webkitAudioContext)();this.master=this.ctx.createGain();
+      const cp=this.ctx.createDynamicsCompressor();this.master.connect(cp);cp.connect(this.ctx.destination);}
+    this.master.gain.value=SET.vol;if(this.ctx.state==='suspended')this.ctx.resume();},
+  stop(){clearInterval(this.sched);this.sched=null;this.tos.forEach(clearTimeout);this.tos=[];this.onNote=null;this.nodes.forEach(n=>{try{n.stop(0)}catch(e){}});this.nodes=[];this.tl=[];},
+  later(fn,t){const d=Math.max(0,(t-this.ctx.currentTime)*1000);this.tos.push(setTimeout(fn,d));},
+  // synthèse additive : les graves reçoivent plus d'harmoniques pour rester audibles sur un petit haut-parleur
+  _osc(t,end,f0,setF,envFn,keep){
+    const ctx=this.ctx,out=ctx.createGain();out.connect(this.master);
+    const boost=f0<165?1.9:f0<262?1.3:1;let sum=0;
+    const ps=PART.filter(([m])=>f0*m<5200).map(([m,g])=>[m,m===1?g:g*boost]);ps.forEach(p=>sum+=p[1]);
+    ps.forEach(([mult,g])=>{const o=ctx.createOscillator(),gn=ctx.createGain();o.type='sine';setF(o.frequency,mult*(1+(mult-1)*.0006));gn.gain.value=g/sum;
+      o.connect(gn);gn.connect(out);o.start(t);o.stop(end+.05);if(!keep)this.nodes.push(o);});
+    envFn(out.gain);
+    if(this.nodes.length>300)this.nodes=this.nodes.slice(-150);
+  },
+  pluck(f,dur,t,vol=.6,keep){try{const end=t+Math.min(dur*.9,2.1);
+    this._osc(t,end,f,(p,m)=>p.setValueAtTime(f*m,t),g=>{g.setValueAtTime(0,t);g.linearRampToValueAtTime(vol,t+.012);g.exponentialRampToValueAtTime(vol*.45,t+.09);g.exponentialRampToValueAtTime(.0001,end);},keep);}catch(e){}},
+  pad(f,dur,t,vol=.32){try{const end=t+dur*.92;
+    this._osc(t,end,f,(p,m)=>p.setValueAtTime(f*m,t),g=>{g.setValueAtTime(0,t);g.linearRampToValueAtTime(vol,t+.1);g.setValueAtTime(vol,Math.max(t+.11,end-.25));g.exponentialRampToValueAtTime(.0001,end);});}catch(e){}},
+  glide(pts,t,vol=.3){try{let tt=t;const times=pts.map(p=>(tt+=p.dt));const end=times[times.length-1];
+    this._osc(t,end,m2f(Math.min(...pts.map(p=>p.m))),(p,mult)=>{pts.forEach((pt,i)=>{const f=m2f(pt.m)*mult;if(i===0)p.setValueAtTime(f,times[0]);else p.exponentialRampToValueAtTime(f,times[i]);});},
+      g=>{g.setValueAtTime(0,t);g.linearRampToValueAtTime(vol,t+.1);g.setValueAtTime(vol,end-.2);g.exponentialRampToValueAtTime(.0001,end);});}catch(e){}},
+  tick(t,acc){if(!SET.click)return;try{const ctx=this.ctx,o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=acc?1600:1200;o.connect(g);g.connect(this.master);
+    g.gain.setValueAtTime(acc?.07:.035,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);o.start(t);o.stop(t+.06);this.nodes.push(o);}catch(e){}},
+  chime(){try{this.init();const t=this.ctx.currentTime+.02;this.pluck(m2f(81),.8,t,.16,true);this.pluck(m2f(88),.8,t+.12,.12,true);}catch(e){}},
+  tone(m,dur=1.4){try{this.init();this.pad(m2f(m),dur,this.ctx.currentTime+.03,.34);}catch(e){}},
+  latency(){return(this.ctx&&this.ctx.outputLatency||0)+(SET.lat||0)/1000;},
+  targetAt(t){for(let i=this.tl.length-1;i>=0;i--){const e=this.tl[i];if(t>=e.t0&&t<e.t1)return{m:e.m0+(e.m1-e.m0)*(t-e.t0)/(e.t1-e.t0),e};}return null;},
+  start(c){this.init();this.stop();if(!c||c.type==='guided')return;
+    if(c.type==='phrase')this._phrase(c);else if(c.type==='glide')this._glide(c);},
+  _trim(){if(this.tl.length>90)this.tl=this.tl.slice(-60);},
+  _phrase(c){
+    const bd=60/c.bpm,R=c.roots,L=c.pattern.length;let ri=(c.start||0)%R.length,pi=0,cyc=0,first=true;
+    this.lo=Math.min(...R)+Math.min(...c.pattern);this.hi=Math.max(...R)+Math.max(...c.pattern);this.pos=ri;
+    let T=this.ctx.currentTime+.25;
+    const go=()=>{while(T<this.ctx.currentTime+2.6){
+      if(pi===0&&cyc===0){const r=ri,m0=R[r]+c.pattern[0],d=first?1.7:c.gap;
+        this.pad(m2f(m0),d*.8,T+(first?0:.12),.22);this.later(()=>{this.pos=r;preview(m0,d);},T);T+=d+(first?.3:0);first=false;}
+      const m=R[ri]+c.pattern[pi];
+      if(c.hold)this.pad(m2f(m),bd,T);else this.pluck(m2f(m),bd*.85,T);
+      this.tick(T,pi===0);
+      this.tl.push({t0:T,t1:T+bd,m0:m,m1:m,id:++this.nid,hold:bd>=1.5});
+      this.later(()=>{this.onNote&&this.onNote(m,false)},T);
+      T+=bd;pi++;
+      if(pi>=L){pi=0;cyc++;if(cyc>=c.cpk){cyc=0;ri=(ri+1)%R.length;}}
+    }this._trim();};
+    this.sched=setInterval(go,240);go();
+  },
+  _glide(c){
+    const Tp=c.tops;let ti=(c.start||0)%Tp.length,first=true,T=this.ctx.currentTime+.25;
+    this.lo=Math.min(c.from,...Tp);this.hi=Math.max(c.from,...Tp);this.pos=ti;
+    const go=()=>{while(T<this.ctx.currentTime+3){
+      const i=ti,top=Tp[i],st=c.oneWay?top:c.from,d=first?1.7:c.gap;
+      this.pad(m2f(st),d*.8,T+(first?0:.12),.22);this.later(()=>{this.pos=i;preview(st,d);},T);T+=d+(first?.3:0);first=false;
+      let dur;
+      if(c.oneWay){this.glide([{m:top,dt:0},{m:c.from,dt:c.down}],T);dur=c.down;this.tl.push({t0:T,t1:T+dur,m0:top,m1:c.from,id:++this.nid,gl:1});}
+      else{this.glide([{m:c.from,dt:0},{m:top,dt:c.up},{m:c.from,dt:c.down}],T);dur=c.up+c.down;
+        this.tl.push({t0:T,t1:T+c.up,m0:c.from,m1:top,id:++this.nid,gl:1},{t0:T+c.up,t1:T+dur,m0:top,m1:c.from,id:this.nid,gl:1});}
+      this.later(()=>{this.onNote&&this.onNote(top,true)},T);
+      T+=dur;ti=(ti+1)%Tp.length;
+    }this._trim();};
+    this.sched=setInterval(go,300);go();
+  }
+};
+function preview(m,d){
+  const b=$('brth');if(b){b.classList.add('show');setTimeout(()=>b.classList.remove('show'),d*900);}
+  const nn=$('note-name');if(nn)nn.textContent='Inspire';
+  const ns=$('note-solf');if(ns)ns.textContent='Écoute ta note de départ : '+m2n(m)+' · '+m2s(m);
+}
+
+// Consignes lues à voix haute
+function speak(txt){if(!SET.tts||!('speechSynthesis' in window))return;try{speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(String(txt).replace(/[«»🎙●■]/g,' ').replace(/(\d)\/10/g,'$1 sur 10'));u.lang='fr-FR';u.rate=1;u.volume=1;speechSynthesis.speak(u);}catch(e){}}
+function hush(){try{'speechSynthesis' in window&&speechSynthesis.cancel();}catch(e){}}
+
+// ═══════════════════════════════════
+// MICRO — détection de hauteur (YIN simplifié)
+// ═══════════════════════════════════
+function detectPitch(buf,sr,rms){
+  const n=buf.length;if(rms<.006)return -1;
+  const minLag=Math.floor(sr/1000),maxLag=Math.min(Math.floor(sr/70),Math.floor(n/2)-1),half=Math.floor(n/2);
+  const d=new Float32Array(maxLag+1),cm=new Float32Array(maxLag+1);
+  for(let tau=1;tau<=maxLag;tau++){let s=0;for(let i=0;i<half;i++){const x=buf[i]-buf[i+tau];s+=x*x;}d[tau]=s;}
+  let run=0;cm[0]=1;for(let tau=1;tau<=maxLag;tau++){run+=d[tau];cm[tau]=run?d[tau]*tau/run:1;}
+  let tau=-1;for(let t=minLag;t<=maxLag;t++){if(cm[t]<.15){while(t+1<=maxLag&&cm[t+1]<cm[t])t++;tau=t;break;}}
+  if(tau<0)return -1;
+  const x0=tau>1?cm[tau-1]:cm[tau],x2=tau<maxLag?cm[tau+1]:cm[tau],den=x0-2*cm[tau]+x2;
+  const better=den?tau+(x0-x2)/(2*den):tau;return sr/better;
+}
+const RAW={echoCancellation:false,noiseSuppression:false,autoGainControl:false};
+async function getMic(){const md=navigator.mediaDevices;if(!md||!md.getUserMedia)throw new Error('nomic');
+  if(SET.micId){try{return await md.getUserMedia({audio:{...RAW,deviceId:{exact:SET.micId}}});}catch(e){}}
+  return md.getUserMedia({audio:RAW});}
+const Mic={stream:null,an:null,buf:null,id:null,on:false,hist:[],onFrame:null,
+  async start(){if(this.on)return true;try{Aud.init();this.stream=await getMic();
+      const src=Aud.ctx.createMediaStreamSource(this.stream);this.an=Aud.ctx.createAnalyser();this.an.fftSize=2048;src.connect(this.an);
+      this.buf=new Float32Array(this.an.fftSize);this.on=true;this.id=setInterval(()=>this._tick(),50);return true;
+    }catch(e){this.stop();return false;}},
+  stop(){clearInterval(this.id);this.id=null;this.on=false;if(this.stream)this.stream.getTracks().forEach(t=>t.stop());this.stream=null;this.an=null;this.hist=[];},
+  _tick(){if(!this.an)return;this.an.getFloatTimeDomainData(this.buf);const b=this.buf,n=b.length;let s=0;for(let i=0;i<n;i++)s+=b[i]*b[i];const rms=Math.sqrt(s/n);
+    const f=detectPitch(b,Aud.ctx.sampleRate,rms),raw=f>0?f2m(f):null;
+    if(raw!=null){this.hist.push(raw);if(this.hist.length>3)this.hist.shift();}else this.hist=[];
+    this.onFrame&&this.onFrame({m:raw!=null?median(this.hist):null,raw,db:20*Math.log10(rms+1e-9),t:Aud.ctx.currentTime});}
+};
+
+// ═══════════════════════════════════
+// MESURES — justesse, stabilité, accrocs, volume
+// ═══════════════════════════════════
+const LOUD={1:6,2:9,3:12,4:12}; // dB au-dessus de la voix parlée avant « trop fort »
+function loudLimit(){return LOUD[PROG?PROG.phase:1]||9;}
+const MET={on:false,kind:null,v:0,hit:0,notes:{},brk:0,lastM:null,lastT:0,lastBrk:0,gapT:0,db:[],over:0,fr:0,
+  begin(kind){this.on=true;this.kind=kind;this.v=0;this.hit=0;this.notes={};this.brk=0;this.lastM=null;this.lastT=0;this.lastBrk=0;this.db=[];this.over=0;this.fr=0;},
+  frame(f){if(!this.on)return;const t=f.t-Aud.latency();
+    if(f.raw==null){return;}
+    this.fr++;
+    if(VOICE.refDb!=null){this.db.push(f.db-VOICE.refDb);if(f.db-VOICE.refDb>loudLimit())this.over++;}
+    let best=null,cur=Aud.targetAt(t);
+    for(const dt of(this.kind==='glide'?[-.1,0,.1]:[-.2,-.1,0,.1,.2])){const g=Aud.targetAt(t+dt);if(g){const e=Math.abs(fold(f.raw-g.m));if(best==null||e<best)best=e;}}
+    if(best!=null){this.v++;if(best<=(this.kind==='glide'?.7:.5))this.hit++;}
+    if(cur&&cur.e.hold&&t-cur.e.t0>.6&&t<cur.e.t1-.25){(this.notes[cur.e.id]=this.notes[cur.e.id]||[]).push(f.raw);}
+    if(this.kind==='glide'&&cur){
+      if(this.lastM!=null&&f.t-this.lastBrk>.6){const gap=f.t-this.lastT,d=Math.abs(f.raw-this.lastM);
+        if((gap<.13&&d>2.5&&d<9.5)||(gap>=.13&&gap<.45)){this.brk++;this.lastBrk=f.t;}}
+      this.lastM=f.raw;this.lastT=f.t;
+    }else{this.lastM=null;}
+  },
+  end(){if(!this.on)return null;this.on=false;if(this.v<25)return null;
+    const st=Object.values(this.notes).filter(a=>a.length>=8).map(a=>sd(a)*100);
+    return{k:this.kind,acc:Math.round(this.hit/this.v*100),stab:st.length?Math.round(mean(st)):null,brk:this.kind==='glide'?this.brk:null,
+      loud:this.db.length?Math.round(mean(this.db)):null,over:this.db.length?Math.round(this.over/this.fr*100):null};}
+};
+
+// ═══════════════════════════════════
+// ENREGISTREMENTS (IndexedDB)
+// ═══════════════════════════════════
+const REC={db:null,mr:null,stream:null,chunks:[],t0:0,
+  open(){return new Promise((res,rej)=>{if(this.db)return res(this.db);try{const r=indexedDB.open('vc3db',1);
+    r.onupgradeneeded=()=>r.result.createObjectStore('recs',{keyPath:'id'});r.onsuccess=()=>{this.db=r.result;res(this.db);};r.onerror=()=>rej(r.error);}catch(e){rej(e);}});},
+  async all(){const db=await this.open();return new Promise((res,rej)=>{const q=db.transaction('recs').objectStore('recs').getAll();q.onsuccess=()=>res(q.result.sort((a,b)=>a.id-b.id));q.onerror=()=>rej(q.error);});},
+  async put(o){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('recs','readwrite');tx.objectStore('recs').put(o);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});},
+  async del(id){const db=await this.open();return new Promise((res,rej)=>{const tx=db.transaction('recs','readwrite');tx.objectStore('recs').delete(id);tx.oncomplete=res;tx.onerror=()=>rej(tx.error);});},
+  async start(){if(!window.MediaRecorder)throw new Error('norec');this.stream=await getMic();this.chunks=[];this.mr=new MediaRecorder(this.stream);
+    this.mr.ondataavailable=e=>{if(e.data&&e.data.size)this.chunks.push(e.data);};this.mr.start();this.t0=Date.now();},
+  // keep=true : enregistrement de la semaine (conservé) ; sinon simple essai à réécouter
+  stop(keep){return new Promise(res=>{const mr=this.mr;if(!mr)return res(null);mr.onstop=async()=>{const blob=new Blob(this.chunks,{type:mr.mimeType||'audio/webm'});
+    this.stream.getTracks().forEach(t=>t.stop());const s=curSong();
+    const o={id:Date.now(),date:new Date().toISOString(),week:PROG?weekNum():0,song:s?s.title:'',dur:Math.round((Date.now()-this.t0)/1000),blob};
+    if(keep){try{await this.put(o);}catch(e){}}this.mr=null;res(o);};mr.stop();});}
+};
+
+// ═══════════════════════════════════
+// EXERCICES
+// Hauteurs relatives au passage (P). ev:'s' = étayé par des études (semi-occlus), sinon pratique de coach.
+// ═══════════════════════════════════
+const CATS={relax:'Relâchement',souffle:'Souffle',paille:'Paille',passage:'Passage',grit:'Grit',appli:'Application',calme:'Retour au calme'};
+const EX={
+  relax:{icon:'🧘',name:'Relâchement',cat:'relax',sub:'Mâchoire · Nuque · Épaules · Bâillement',audio:{type:'guided'},
+    steps:['Debout, pieds largeur de hanches, genoux souples.','Les consignes sont lues à voix haute et changent toutes les 15 secondes.','Rien à chanter fort : on prépare le corps.'],
+    tip:'Une voix qui pousse vient souvent d’un corps crispé. Cette minute et demie rend tout le reste plus facile.',
+    cues:()=>[[0,'Masse les joues et l’articulation de la mâchoire avec le plat des doigts, bouche entrouverte.'],[15,'Laisse la mâchoire pendre. Fais « non » de la tête, très lentement.'],[30,'Roule les épaules en arrière cinq fois, puis laisse-les tomber.'],[45,'Bâille pour de vrai, bouche grande ouverte. Sens la gorge s’élargir.'],[62,'Soupir sonore « haaa » de l’aigu vers le grave, léger, comme soulagé. Trois fois.'],[78,'Pose deux doigts sur ta pomme d’Adam. C’est ton repère pour toute la séance.']]},
+  souffle:{icon:'🌬️',name:'Souffle régulier',cat:'souffle',sub:'« Sss » long et égal · Respiration basse',audio:{type:'guided'},
+    steps:['Une main sur le ventre, l’autre sur les côtes.','Inspire bas, puis expire sur un « sss » régulier, sans pousser à la fin.','Le but : un débit d’air égal du début à la fin.'],
+    tip:'Un débit d’air régulier, c’est ce qui tient une note stable et une phrase longue.',
+    cues:()=>[[0,'Inspire par le nez pendant 4 secondes. Le ventre et les côtes s’ouvrent, les épaules ne bougent pas.'],[8,'Expire sur un « sss » régulier, le plus longtemps possible. Le son ne tremble pas et ne force pas à la fin.'],[30,'Inspire 4 secondes. Puis « sss » à nouveau : même débit du début à la fin.'],[48,'Une dernière fois sur « fff », très doux. Garde cette respiration basse pour toute la séance.']]},
+
+  paille_sirene:{icon:'🥤',name:'Sirènes à la paille',cat:'paille',ev:'s',sub:'Paille dans l’air · Grave → aigu → grave · Volume doux',
+    audio:{type:'glide',from:-21,top:-2,topMax:6,up:3,down:3,gap:2},
+    steps:['Paille entre les lèvres, lèvres bien fermées autour. Les joues ne gonflent pas.','Pendant la pause tu entends ta note de départ. Puis suis la sirène : elle monte, puis redescend.','Le sommet monte d’un demi-ton à chaque sirène et dépasse ton passage : c’est voulu.','Au passage, laisse le son s’alléger au lieu de pousser. Une cassure ici n’est pas grave.','Pendant la pause : inspire par le nez, calmement.'],
+    tip:'La paille équilibre la pression d’air : c’est l’exercice le plus sûr pour apprendre à traverser le passage sans pousser.'},
+  paille_eau:{icon:'🫧',name:'Paille dans l’eau',cat:'paille',ev:'s',sub:'Verre d’eau · 2–3 cm de profondeur · Bulles régulières',
+    audio:{type:'glide',from:-18,top:-4,topMax:4,up:3,down:3,gap:2},
+    steps:['Plonge le bout de la paille dans un verre d’eau, à 2–3 cm de profondeur.','Fais des bulles et chante en même temps, en suivant la sirène.','Les bulles doivent rester régulières du grave à l’aigu. Si elles s’emballent, tu envoies trop d’air.','Reste à 2–3 cm : plus profond, c’est trop résistant.','Pendant la pause : inspire par le nez.'],
+    tip:'Les bulles sont un témoin visuel : un débit d’air régulier, c’est une voix stable. C’est exactement ce qui manque à ton mix.'},
+  paille_gammes:{icon:'🎼',name:'Gammes à la paille',cat:'paille',ev:'s',sub:'5 notes montantes et descendantes · Paille dans l’air',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,5,4,2,0],rootFrom:-18,rootTo:-1,bpm:100,gap:1.8,cpk:1},
+    steps:['Paille dans l’air, son continu « ouuu » dans la paille.','Écoute la note de départ pendant la pause, puis suis les 5 notes qui montent et redescendent.','La gamme monte d’un demi-ton à chaque fois, jusqu’au-dessus de ton passage, puis redescend.','Les notes sont liées, sans à-coup entre elles.','Pendant la pause : inspire.'],
+    tip:'Si une note « saute » toujours au même endroit, c’est ton passage. Allège juste avant, pas pendant.'},
+  paille_messa:{icon:'🌗',name:'Crescendo à la paille',cat:'paille',ev:'s',sub:'Note tenue · Doux → un peu plus fort → doux',
+    audio:{type:'phrase',pattern:[0],rootFrom:-6,rootTo:1,bpm:8,gap:3,cpk:1,hold:true},
+    steps:['Paille dans l’air. Une note tenue environ 7 secondes.','Commence très doux, augmente un peu jusqu’au milieu, puis reviens au doux.','Le son ne doit jamais casser ni changer de couleur d’un coup.','Les notes se rapprochent de ton passage puis le traversent.','Pendant la pause : inspire.'],
+    tip:'Le crescendo vient du souffle, pas de la gorge. Si la pomme d’Adam monte quand tu augmentes, c’est que tu pousses.'},
+
+  // ── PHASE 1
+  ng_5:{icon:'🐝',name:'« Ng » sur 5 notes',cat:'passage',rate:true,ev:'s',sub:'Son « ng » · Volume 4/10 · Doigt sur la pomme d’Adam',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,5,4,2,0],rootFrom:-18,rootTo:-4,bpm:96,gap:1.8,cpk:1},
+    steps:['Son « ng » comme à la fin de « camping » : bouche entrouverte, dos de la langue contre le palais.','Volume 4 sur 10. C’est volontairement petit.','Deux doigts sur la pomme d’Adam : elle reste à peu près au même endroit.','En approchant du passage, rends le son plus fin au lieu de pousser.','Si la pomme monte : encore plus doux, jusqu’à ce qu’elle reste stable.'],
+    tip:'Le « ng » empêche de crier : c’est le meilleur son pour sentir le passage sans la pression.'},
+  ou_5:{icon:'🌀',name:'« Ou » léger',cat:'passage',rate:true,sub:'Lèvres arrondies · Voix légère · Traverse le passage',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,5,4,2,0],rootFrom:-16,rootTo:-3,bpm:96,gap:1.8,cpk:1},
+    steps:['Voyelle « ou », lèvres arrondies vers l’avant, mâchoire détendue.','Voix légère, comme pour ne pas réveiller quelqu’un.','Dans les notes hautes, laisse la voix devenir plus fine : c’est normal en phase 1.','Respecte la règle de la phase affichée en haut : au-dessus, la voix légère suffit.','Pendant la pause : inspire.'],
+    tip:'On apprend d’abord à monter léger. Le corps du son viendra en phase 2, sur une base sans pression.'},
+  trille_levres:{icon:'💨',name:'Trilles de lèvres',cat:'passage',rate:true,ev:'s',sub:'« Brrr » · Arpège 1-3-5-8 · Sans forcer',
+    audio:{type:'phrase',pattern:[0,4,7,12,7,4,0],rootFrom:-21,rootTo:-7,bpm:92,gap:1.8,cpk:1},
+    steps:['Lèvres relâchées, souffle continu : elles vibrent « brrr ».','Si ça ne vibre pas : un doigt sur chaque joue près des commissures, pousse-les légèrement vers le haut.','Suis l’arpège : il monte d’une octave et redescend.','Si les lèvres s’arrêtent sur les notes hautes, il y a trop de pression : allège.','Pendant la pause : inspire.'],
+    tip:'Les trilles ne pardonnent pas la poussée : si ça vibre jusqu’en haut, ton passage s’est fait sans pression.'},
+  falsetto_desc:{icon:'🪶',name:'Falsetto qui descend',cat:'passage',rate:true,sub:'« Ou » en falsetto · De l’aigu vers le grave · Sans casser',
+    audio:{type:'phrase',pattern:[0,-2,-4,-5,-7,-9,-11,-12,-14,-16,-17],rootFrom:3,rootTo:8,bpm:104,gap:2,cpk:1},
+    steps:['Écoute la note de départ, puis commence en falsetto léger sur « ou ».','Descends en suivant les notes, sans changer de mode d’un coup.','En traversant ton passage, laisse le son prendre doucement du corps.','Le départ monte d’un demi-ton à chaque fois : on n’attaque jamais ta note la plus haute à froid.','Si ça casse en descendant : recommence plus doucement.'],
+    tip:'Ton falsetto monte haut : c’est une force. En le faisant descendre, tu construis le mix par le haut, sans pression.'},
+  bailler:{icon:'🥱',name:'Bâillement-soupir',cat:'passage',sub:'« Haaa » de l’aigu au grave · Sensation de bâillement',
+    audio:{type:'glide',oneWay:true,from:-14,top:2,topMax:6,down:4,gap:2.5},
+    steps:['Commence un bâillement : sens la gorge s’ouvrir et la pomme d’Adam descendre un peu.','Sur cette sensation, glisse « haaa » de l’aigu vers le grave, comme un soupir de soulagement.','Très léger. On ne cherche pas un beau son, on cherche une gorge large.','Garde un doigt sur la pomme d’Adam : elle reste basse.','Pendant la pause : bâille à nouveau.'],
+    tip:'C’est l’antidote direct à la pomme d’Adam qui monte. Garde cette sensation de gorge large dans les autres exercices.'},
+  tenue_ou:{icon:'📏',name:'Tenues stables',cat:'passage',rate:true,sub:'Note tenue 6 secondes sur « ou » · Volume 4/10 · Son droit',
+    audio:{type:'phrase',pattern:[0],rootFrom:-14,rootTo:-6,bpm:10,gap:3,cpk:1,hold:true},
+    steps:['Écoute la note pendant la pause, puis tiens-la 6 secondes sur « ou ».','Volume 4 sur 10, son droit : ni vibrato forcé, ni note qui glisse.','Pense à ton « sss » : le même débit d’air du début à la fin.','Avec le micro, l’app mesure de combien ta note bouge. Moins elle bouge, mieux c’est.','Pendant la pause : inspire bas.'],
+    tip:'La stabilité est ton objectif n°1 : une note tenue sans bouger dans le médium se transporte ensuite vers le passage.'},
+
+  // ── PHASE 2
+  ne_octave:{icon:'🎯',name:'« Nè » sur l’octave',cat:'passage',rate:true,sub:'« Nè » brillant · Arpège 1-3-5-8 · Volume 5/10',
+    audio:{type:'phrase',pattern:[0,4,7,12,7,4,0],rootFrom:-14,rootTo:-7,bpm:96,gap:1.8,cpk:1},
+    steps:['Syllabe « nè », voyelle brillante, petite bouche, léger sourire.','Volume 5 sur 10. Dans l’aigu, le son reste clair et petit : ni crié, ni soufflé.','Le « n » net à chaque note aide les cordes à rester connectées sans pousser.','De temps en temps, pince-toi le nez : le son ne doit presque pas changer.','Les tonalités arrivent dans le désordre : écoute bien la note de départ.'],
+    tip:'C’est la base du mix : un son petit et brillant qui garde sa connexion dans l’aigu. On l’arrondira ensuite.'},
+  gue_5:{icon:'🦆',name:'« Gué » sur 5 notes',cat:'passage',rate:true,sub:'« Gué » · Gamme 5 notes · Pomme d’Adam stable',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,5,4,2,0],rootFrom:-14,rootTo:-3,bpm:100,gap:1.8,cpk:1},
+    steps:['Syllabe « gué » sur chaque note, avec un G bien net.','Le G aide à garder les cordes vocales connectées au passage.','Volume 5 sur 10, doigt sur la pomme d’Adam.','Au passage, le son devient plus étroit mais ne bascule pas en falsetto.','Pendant la pause : inspire et écoute la note de départ.'],
+    tip:'Si ça bascule en falsetto : baisse encore le volume. Si ça crie : ouvre moins la bouche.'},
+  mum:{icon:'🫶',name:'« Mum »',cat:'passage',rate:true,sub:'« Mum » · Arpège 1-3-5-3-1 · Du corps sans pousser',
+    audio:{type:'phrase',pattern:[0,4,7,4,0],rootFrom:-12,rootTo:-2,bpm:84,gap:1.8,cpk:1},
+    steps:['Syllabe « mum » (comme « meum »), un peu bête, un peu sombre.','Le M donne de la résonance, le « eu » arrondit le son.','Laisse un peu plus de corps qu’en phase 1, sans que la pomme d’Adam monte.','Dans l’aigu, pense « petit et rond » plutôt que « fort ».','Pendant la pause : inspire.'],
+    tip:'Le « eu » est ta voyelle de mix : c’est elle qui donne la rondeur que tu cherches dans l’aigu.'},
+  ng_a:{icon:'🌉',name:'Du « ng » au « a »',cat:'passage',rate:true,sub:'Monte sur « ng » · Redescend sur « a » · Même sensation',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,5,4,2,0],rootFrom:-16,rootTo:-5,bpm:88,gap:1.8,cpk:1},
+    steps:['Monte les 5 notes sur « ng ».','Sur la note du haut, ouvre lentement vers « a » sans rien changer d’autre, puis redescends sur « a ».','Le « a » doit garder la place et la légèreté du « ng » : ni plus fort, ni plus large.','Si le « a » crie ou serre : ouvre moins la bouche et pense « o ».','Pendant la pause : inspire.'],
+    tip:'C’est le pont entre les exercices et les chansons : garder la sensation facile quand la bouche s’ouvre.'},
+  messa_mix:{icon:'🎚️',name:'Messa di voce en mix',cat:'passage',rate:true,sub:'Note tenue · 4 → 6 → 4 sur 10 · Autour du passage',
+    audio:{type:'phrase',pattern:[0],rootFrom:-4,rootTo:1,bpm:7,gap:3,cpk:1,hold:true},
+    steps:['Une note tenue environ 8 secondes, sur « nè » ou « eu ».','Commence à 4/10, monte à 6/10 au milieu, reviens à 4/10.','Le son ne bascule pas en falsetto et ne devient pas crié quand tu augmentes.','Les notes tournent autour de ton passage : c’est là que tout se joue.','Pendant la pause : inspire.'],
+    tip:'Ça bascule en falsetto en diminuant ? Garde le « n » bien net. Ça crie en augmentant ? Moins de volume, plus de brillance.'},
+  voyelle_mod:{icon:'🔄',name:'Voyelle qui se ferme',cat:'passage',rate:true,sub:'« A » qui devient « eu » en montant · Arpège 1-3-5-8',
+    audio:{type:'phrase',pattern:[0,4,7,12,7,4,0],rootFrom:-16,rootTo:-8,bpm:88,gap:1.8,cpk:1},
+    steps:['Sur la note grave, « a » normal.','En montant, ferme la voyelle progressivement : « a » → « o » ouvert → « eu » sur la note du haut.','En redescendant, rouvre vers « a ».','La bouche s’ouvre un peu moins à mesure que tu montes : c’est ce qui évite le cri.','Pendant la pause : inspire.'],
+    tip:'Dans l’aigu, les bons chanteurs pop et soul chantent des voyelles plus étroites qu’on croit. C’est ce qui rend le son rond et pas crié.'},
+
+  // ── PHASE 3
+  gamme_9:{icon:'🏃',name:'Gamme sur la neuvième',cat:'passage',rate:true,sub:'« Ya » · 9 notes en une respiration · Volume 6/10',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,9,11,12,14,12,11,9,7,5,4,2,0],rootFrom:-17,rootTo:-10,bpm:120,gap:2,cpk:1},
+    steps:['Sur « ya », une gamme de 9 notes qui monte et redescend, en une seule respiration.','Volume jusqu’à 6/10. Le mix sonne pareil en haut et en bas.','Pas de bascule au passage : la couleur change doucement.','Tu manques d’air ? Tu en envoies trop : moins de souffle, pas plus.','Pendant la pause : inspire.'],
+    tip:'L’endurance, c’est enchaîner sans pousser. Tu dois pouvoir faire cet exercice 3 minutes sans fatigue.'},
+  riffs:{icon:'🎷',name:'Runs pentatoniques',cat:'passage',rate:true,sub:'Runs rapides · En mix · Précision',
+    audio:{type:'phrase',pattern:[0,3,5,7,10,12,10,7,5,3,0],rootFrom:-15,rootTo:-7,bpm:150,gap:1.8,cpk:1},
+    steps:['Sur « ya » ou « ah », chante le run : chaque note est nette.','Tu es à l’aise avec les runs : ici, le but est de les faire en mix, pas en voix pleine poussée.','La légèreté d’abord, la vitesse suivra.','Même sensation en haut et en bas du run.','Pendant la pause : inspire.'],
+    tip:'Un run propre en mix, c’est exactement ce qu’on attend d’un chanteur de reprises en hôtel.'},
+  phrase_longue:{icon:'🪢',name:'Phrases longues',cat:'passage',rate:true,sub:'2 gammes en une respiration · Son égal',
+    audio:{type:'phrase',pattern:[0,2,4,5,7,5,4,2,0,2,4,5,7,5,4,2,0],rootFrom:-15,rootTo:-6,bpm:112,gap:2.2,cpk:1},
+    steps:['Deux gammes de 5 notes enchaînées en une seule respiration, sur « nè » puis sur « a ».','Le son reste égal du début à la fin, même quand l’air diminue.','Pas d’effort en fin de phrase : si ça serre, la phrase est trop longue pour aujourd’hui.','Pendant la pause : inspire bas, sans lever les épaules.'],
+    tip:'En concert, la fatigue vient des fins de phrase poussées. Ici, tu apprends à finir aussi libre que tu as commencé.'},
+
+  // ── PHASE 4
+  rire_silencieux:{icon:'🤫',name:'Rire silencieux',cat:'grit',sub:'Ouvrir la gorge avant tout grit',audio:{type:'guided'},
+    steps:['C’est la base d’un grit sans danger : apprendre à ouvrir la gorge.','Suis les consignes lues à voix haute.','Aucun son forcé dans cet exercice.'],
+    tip:'Le grit sain se fait sur une gorge ouverte. Sans cette sensation, il frotte sur les cordes et fait mal.',
+    cues:()=>[[0,'Ris en silence, comme si tu riais en cachette. Sens la gorge qui s’élargit.'],[25,'Garde cette sensation et respire 3 fois dedans, sans bruit.'],[50,'Toujours dans cette sensation, chuchote « ha ha ha ». La gorge reste large.'],[80,'Ajoute un tout petit son sur « ha », volume 3/10. Ça ne doit pas frotter.'],[110,'Alterne : rire silencieux, puis « hey » léger. 5 fois.'],[140,'Dernière minute : « hey » à 4/10 en gardant la gorge ouverte. Au moindre frottement, retour au rire silencieux.']]},
+  fry_onset:{icon:'🔥',name:'Du fry au son',cat:'grit',rate:true,sub:'Craquement grave → son plein · Sans effort',
+    audio:{type:'phrase',pattern:[0,4,7],rootFrom:-18,rootTo:-11,bpm:44,gap:2.5,cpk:2},
+    steps:['Commence chaque note dans un craquement grave et détendu (vocal fry), comme une porte qui grince doucement.','Le fry est totalement sans effort, comme quand tu parles en t’endormant.','Depuis le fry, ouvre vers le son normal sans à-coup.','Si tu forces pour faire le fry : relâche tout et recommence plus doucement.','Pendant la pause : gorge détendue.'],
+    tip:'Le fry t’apprend à mettre une texture sur la voix sans pression. C’est la porte d’entrée du grit.'},
+  grit_leger:{icon:'🐯',name:'Grit léger',cat:'grit',rate:true,sub:'Gorge ouverte · Accents courts · Zone médium',
+    audio:{type:'phrase',pattern:[0,2,4,2,0],rootFrom:-18,rootTo:-10,bpm:60,gap:2.5,cpk:1},
+    steps:['Prends la sensation du rire silencieux : gorge large.','Sur « yeah », ajoute un léger grain seulement au début de la première note, une demi-seconde.','Le reste de la phrase est propre. Le grit est un accent, pas un mode.','Volume 5/10 maximum, dans le médium seulement.','Ça frotte, ça gratte ou ça fait mal : stop, retour au rire silencieux.'],
+    tip:'Le grit de James Brown et de MJ est court et placé. On commence par des accents d’une demi-seconde, rien de plus.'},
+  grit_phrase:{icon:'🎙️',name:'Grit en phrase',cat:'grit',sub:'Ad-libs · Accents grit dans une vraie phrase',audio:{type:'guided'},
+    steps:['On applique le grit à des ad-libs et à une phrase de ton morceau.','Suis les consignes lues à voix haute.','Au moindre grattement : stop, passe à la suite.'],
+    tip:'Un bon grit s’entend à peine dans le mix : c’est une couleur sur une voix saine, pas un effort.',
+    cues:()=>[[0,'Rire silencieux 3 fois : gorge ouverte.'],[20,'Ad-lib « hey ! » avec un petit grain au début, volume 5/10. 5 fois.'],[50,'Ad-lib « ow ! » court, dans le médium-aigu, grain léger. 5 fois, avec une pause entre chaque.'],[85,'Prends une phrase de ton morceau objectif. Mets du grit seulement sur le premier mot.'],[125,'Même phrase sans grit du tout. Compare : le reste doit sonner pareil.'],[155,'Une dernière fois avec grit. Si ça gratte : stop.']]},
+
+  // ── APPLICATION, BILAN & CALME
+  appli:{icon:'🎤',name:'Application',cat:'appli',take:true,sub:'Ton morceau objectif · Même sensation que les exercices',audio:{type:'guided'},
+    steps:['Mets ton morceau objectif dans ta tonalité, ou chante a cappella.','Même phrase trois fois : à la paille, sur une syllabe facile, puis avec les paroles.','Le bouton ● t’enregistre pour te réécouter tout de suite : ton oreille est ton meilleur retour.'],
+    tip:'Garder la sensation des exercices dans une vraie chanson : c’est le moment le plus important de la séance.',
+    cues:(dur,phase)=>{const sg=curSong(),s=sg?('« '+sg.title+' »'):'ton morceau objectif',lim=m2n(n2m(VOICE.chestMax)-1),tr=sg?transp(sg):null,syl=phase===1?'« ng »':'« mum »';
+      const key=tr&&tr.now?' Chante-le '+Math.abs(tr.now)+' demi-ton'+(Math.abs(tr.now)>1?'s':'')+' plus bas que l’original.':'';
+      return[[0,'Prends la phrase la plus difficile de '+s+'. Chante seulement sa mélodie à la paille, trois fois.'+key],
+        [Math.round(dur*.2),'Même phrase sur '+syl+', volume doux. Garde la sensation de la paille.'],
+        [Math.round(dur*.4),phase===1?('Maintenant avec les paroles. Au-dessus de '+lim+', voix légère : on ne pousse pas.'):'Maintenant avec les paroles. Sur la note la plus haute, la pomme d’Adam reste stable.'],
+        [Math.round(dur*.6),'Touche le bouton ● et enregistre la phrase. Réécoute-toi tout de suite : qu’est-ce qui a changé ?'],
+        [Math.round(dur*.8),phase>=3?'Enchaîne le refrain de deux morceaux de ton répertoire, sans pause entre les deux.':'Refrain complet, avec la même sensation facile.']];}},
+  bilan:{icon:'📼',name:'Bilan de la semaine',cat:'appli',take:true,keep:true,sub:'Enregistrement hebdomadaire · Comparaison avec ta référence',audio:{type:'guided'},
+    steps:['Chaque semaine, le même refrain, a cappella, téléphone à la même distance.','Touche ● pour enregistrer, ■ pour arrêter. L’app affiche ensuite ta référence et l’enregistrement du jour.','Écoute les deux : c’est là que tu entends le progrès.'],
+    tip:'Ne juge pas la beauté : écoute la stabilité, la facilité dans l’aigu et la fin des phrases.',
+    cues:(dur)=>{const sg=curSong(),s=sg?('« '+sg.title+' »'):'ton morceau objectif';
+      return[[0,'Touche le bouton ● et chante le refrain de '+s+' a cappella. Puis touche ■.'],
+        [Math.round(dur*.4),'Écoute ta référence, puis l’enregistrement d’aujourd’hui. Note une chose qui a changé.'],
+        [Math.round(dur*.75),'Chante le refrain une dernière fois, avec la sensation la plus facile de la semaine.']];}},
+  calme:{icon:'🌙',name:'Retour au calme',cat:'calme',ev:'s',sub:'Paille · Glissés doux vers le grave',
+    audio:{type:'glide',oneWay:true,from:-20,top:-8,topMax:-4,down:5,gap:2},
+    steps:['Paille dans l’air, volume très doux.','Glisse lentement du médium vers le grave.','Tu ramènes ta voix au calme, comme des étirements après le sport.'],
+    tip:'Ne saute pas cette étape : c’est ce qui évite la voix fatiguée le soir même.'}
+};
+
+// ═══════════════════════════════════
+// PROGRAMME — 4 phases, 26 semaines, 6 séances / semaine, 20 min
+// ═══════════════════════════════════
+const TPL_A=[['relax',90],['souffle',60],['paille',270],['passage',200],['passage',200],['appli',260],['calme',120]];
+const TPL_B=[['relax',90],['souffle',60],['paille',210],['passage',180],['passage',180],['appli',360],['calme',120]];
+const PH={
+  1:{name:'Arrêter de pousser',weeks:4,color:'#8B83E8',goal:'Larynx stable, pression basse : tu désapprends à pousser.',tpl:TPL_A,
+    titles:['Lâcher la pression','Larynx tranquille','Le falsetto descend','Glisser sans casser','Tenir sans bouger','Bilan de semaine'],
+    focus:['Petit volume, note stable.','Trilles et bâillement : la gorge s’élargit.','Construire le mix par le haut.','Traverser le passage sans à-coup.','Un son droit, sans pression.','Tout assembler, toujours sans pousser.'],
+    paille:['paille_sirene','paille_eau','paille_gammes','paille_sirene','paille_eau','paille_gammes'],
+    pairs:[['ng_5','tenue_ou'],['trille_levres','bailler'],['falsetto_desc','ou_5'],['ng_5','bailler'],['trille_levres','tenue_ou'],['falsetto_desc','ng_5']]},
+  2:{name:'Construire le mix',weeks:6,color:'#35B589',goal:'Le milieu entre voix pleine et falsetto : un son connecté, puis rond.',tpl:TPL_A,
+    titles:['Le milieu de la voix','Le G qui connecte','Messa di voce','Voyelles intelligentes','Mum : du corps sans pousser','Bilan de semaine'],
+    focus:['Un son petit et brillant dans l’aigu.','Rester connecté au passage.','Varier le volume sans basculer.','Fermer les voyelles pour arrondir.','Ajouter du corps sans pression.','Le mix dans toutes les situations.'],
+    paille:['paille_gammes','paille_messa','paille_sirene','paille_messa','paille_gammes','paille_eau'],
+    pairs:[['ne_octave','ng_a'],['gue_5','mum'],['messa_mix','ne_octave'],['voyelle_mod','gue_5'],['mum','ng_a'],['ne_octave','voyelle_mod']]},
+  3:{name:'Endurance & répertoire',weeks:8,color:'#D4931A',goal:'Chanter longtemps et facilement : enchaîner les phrases et les morceaux.',tpl:TPL_B,
+    titles:['Endurance I','Runs en mix','Phrases longues','Endurance II','Couleurs','Bilan de semaine'],
+    focus:['Enchaîner sans fatigue.','Agilité en mix.','Finir les phrases aussi libre qu’au début.','Volume jusqu’à 6/10, sans pousser.','Arrondir, connecter, enchaîner.','Le répertoire comme en concert.'],
+    paille:['paille_gammes','paille_messa','paille_sirene','paille_gammes','paille_messa','paille_sirene'],
+    pairs:[['gamme_9','messa_mix'],['riffs','gue_5'],['phrase_longue','ne_octave'],['gamme_9','riffs'],['voyelle_mod','phrase_longue'],['messa_mix','riffs']]},
+  4:{name:'Grit',weeks:8,color:'#D96040',goal:'Une texture grit placée et sans douleur, sur une voix qui reste saine.',tpl:TPL_B,
+    titles:['Gorge ouverte','Du fry au son','Grit léger','Gorge ouverte II','Grit + mix','Grit en phrase'],
+    focus:['Préparer la gorge au grit.','Une texture sans pression.','Des accents d’une demi-seconde.','Endurance en gardant la gorge large.','Alterner grit et mix propre.','Le grit dans une vraie phrase.'],
+    paille:['paille_gammes','paille_messa','paille_sirene','paille_gammes','paille_messa','paille_sirene'],
+    pairs:[['rire_silencieux','messa_mix'],['fry_onset','gamme_9'],['grit_leger','riffs'],['rire_silencieux','phrase_longue'],['grit_leger','messa_mix'],['grit_phrase','gamme_9']]}
+};
+const EXPRESS={title:'Échauffement express',focus:'5 minutes avant de chanter en public.',items:[{key:'relax',dur:45},{key:'paille_sirene',dur:120},{key:'trille_levres',dur:75},{key:'ou_5',dur:60}]};
+function phaseRule(p){const lim=m2n(n2m(VOICE.chestMax)-1);
+  return{1:'Pas de voix pleine au-dessus de '+lim+' · Au-dessus, tu allèges · Volume 4/10',
+    2:'Volume 5/10 · Pomme d’Adam stable · Le mix reste facile, jamais crié',
+    3:'Volume jusqu’à 6/10 · Une respiration par phrase · Ça gratte → stop',
+    4:'Le grit est une texture, jamais de la force · Ça gratte ou fait mal → stop immédiat'}[p];}
+function weekOffset(p){let s=0;for(let i=1;i<p;i++)s+=PH[i].weeks;return s;}
+function weekNum(){return Math.min(26,weekOffset(PROG.phase)+PROG.pw);}
+
+const MOTIV=['Moins de force, plus de son. Toujours.','La pomme d’Adam reste tranquille : c’est ton repère.','Petit et facile aujourd’hui, rond et puissant demain.','Ta voix se souvient de tout ce que tu lui apprends.','La régularité bat le talent. Continue.','Relâche les épaules. La voix s’ouvre quand le corps lâche.','Une cassure n’est pas un échec : c’est de l’information.','Écoute. Ta voix te dit ce dont elle a besoin.'];
+const DIFF=[{e:'😴',l:'Trop\nfacile'},{e:'😊',l:'Facile'},{e:'😐',l:'OK'},{e:'😤',l:'Difficile'},{e:'😰',l:'Très\ndifficile'}];
+const QS=[
+  {k:'larynx',l:()=>'Ta pomme d’Adam sur les notes hautes ?',o:[['stable','🟢 Stable'],['peu','🟡 Monte un peu'],['beaucoup','🔴 Monte beaucoup']]},
+  {k:'passage',l:()=>'Le passage (vers '+VOICE.passage+') ?',o:[['lisse','🌊 Lisse'],['effort','🌉 Avec effort'],['casse','💔 Cassure'],['crie','📢 Crié / poussé']]},
+  {k:'volume',l:()=>'Ton volume ?',o:[['doux','🎚️ Resté doux'],['fort','🔊 Je suis monté fort']]},
+  {k:'tension',multi:true,l:()=>'Des tensions ? (plusieurs choix possibles)',o:[['aucune','🟢 Aucune'],['machoire','Mâchoire'],['gorge','Gorge'],['menton','Menton levé'],['epaules','Nuque / épaules']]},
+  {k:'voice',l:()=>'Ta voix, là maintenant ?',o:[['normale','🟢 Normale'],['fatigue','🟡 Un peu fatiguée'],['gratte','🔴 Ça gratte']]}
+];
+const QL={larynx:{stable:'Pomme stable',peu:'Pomme monte un peu',beaucoup:'Pomme monte beaucoup'},passage:{lisse:'Passage lisse',effort:'Passage avec effort',casse:'Cassure',crie:'Passage crié'},voice:{normale:'Voix normale',fatigue:'Voix fatiguée',gratte:'Ça gratte'}};
+
+// ═══════════════════════════════════
+// LOGIQUE
+// ═══════════════════════════════════
+function resolveAudio(key,offset,phase){
+  const ex=EX[key],a=ex.audio;if(!a||a.type==='guided')return{type:'guided'};
+  const P=n2m(VOICE.passage),hiLim=n2m(VOICE.falsMax),loLim=n2m(VOICE.low);
+  const core=ex.cat==='passage'||ex.cat==='grit',off=(PITCH[key]||0)+(core?offset:0);
+  if(a.type==='phrase'){
+    const mx=Math.max(...a.pattern),mn=Math.min(...a.pattern);
+    let rf=P+a.rootFrom+off,rt=P+a.rootTo+off;
+    const top=rt+mx;if(top>hiLim)rt-=top-hiLim;
+    const bot=rf+mn;if(bot<loLim)rf+=loLim-bot;
+    if(rt<rf)rt=rf;
+    // Phase 1 : montée puis descente par demi-tons. Ensuite : une montée, puis les tonalités dans le désordre.
+    let roots;if(phase>=2&&core&&rt-rf>=2){roots=range(rf,rt);for(let i=0;i<8;i++){let s=shuffle(range(rf,rt));if(s[0]===roots[roots.length-1])s.reverse();roots=roots.concat(s);}}
+    else roots=pingpong(rf,rt);
+    return{type:'phrase',pattern:a.pattern,roots,bpm:a.bpm*(TEMPO[key]||1),gap:a.gap,cpk:a.cpk,hold:!!a.hold};
+  }
+  let t0=P+a.top+off,t1=P+a.topMax+off;if(t1>hiLim){t1=hiLim;if(t0>t1)t0=t1;}
+  return{type:'glide',from:Math.max(loLim,P+a.from+off),tops:pingpong(t0,t1),up:a.up,down:a.down,gap:a.gap,oneWay:!!a.oneWay};
+}
+function rangeOf(cfg){if(cfg.type==='phrase')return[Math.min(...cfg.roots)+Math.min(...cfg.pattern),Math.max(...cfg.roots)+Math.max(...cfg.pattern)];
+  if(cfg.type==='glide')return[Math.min(cfg.from,...cfg.tops),Math.max(cfg.from,...cfg.tops)];return null;}
+
+function sDay(s){return s.day||String(s.date).slice(0,10);}
+function hasT(q,t){const x=q.tension;return Array.isArray(x)?x.includes(t):x===t;}
+// pre = état de la voix déclaré aujourd'hui (check-in), sinon null
+function getAdapt(pre){
+  const a={light:false,noGrit:false,swapBailler:false,swapFals:false,offset:0,notes:[],warn:null},t=todayStr();
+  const rec=SESSIONS.filter(s=>s.q&&daysBetween(sDay(s),t)<=7).slice(0,3),last=rec[0],q=last?last.q:{};
+  const voice=pre||(last&&daysBetween(sDay(last),t)<=2?q.voice:null);
+  if(voice==='gratte'){a.light=true;a.noGrit=true;
+    if(pre&&last&&q.voice==='gratte')a.warn='Ça grattait déjà à la dernière séance : repos complet aujourd’hui, c’est mieux. Si l’enrouement dure plus de 2 semaines, consulte un ORL.';
+    else a.notes.push(pre?'Ça gratte aujourd’hui → séance allégée de 10 min, paille uniquement.':'Ça grattait la dernière fois → séance allégée de 10 min.');}
+  else if(voice==='fatigue'){a.noGrit=true;a.notes.push((pre?'Voix fatiguée aujourd’hui':'Voix fatiguée la dernière fois')+' → pas de grit, volume 4/10.');}
+  if(!last)return a;
+  const n=f=>rec.filter(s=>f(s.q)).length;
+  if(q.larynx==='beaucoup'){a.offset=-1;a.swapBailler=true;a.notes.push('Pomme d’Adam qui monte → exercices un demi-ton plus bas, bâillement-soupir ajouté.');}
+  if(q.passage==='crie'){a.offset=-1;a.notes.push('Passage crié → plus bas et plus doux aujourd’hui.');}
+  if(q.passage==='casse'){a.swapFals=true;a.notes.push('Cassure au passage → falsetto qui descend ajouté : on recolle les registres par le haut.');}
+  if(!a.offset&&n(x=>x.passage==='effort')>=2){a.offset=-1;a.notes.push('Passage avec effort plusieurs fois → un demi-ton plus bas aujourd’hui.');}
+  if(q.volume==='fort')a.notes.push('Tu es monté fort la dernière fois : surveille la jauge de volume.');
+  if(hasT(q,'machoire'))a.notes.push('Mâchoire : laisse-la pendre, pouce sous le menton pour vérifier que c’est mou.');
+  if(hasT(q,'gorge')){a.swapBailler=true;a.notes.push('Gorge serrée → bâillement-soupir ajouté.');}
+  if(hasT(q,'menton'))a.notes.push('Menton qui monte : garde le regard à l’horizontale, même sur les notes hautes.');
+  if(hasT(q,'epaules'))a.notes.push('Épaules : roule-les en arrière avant chaque exercice.');
+  return a;
+}
+
+function buildSession(phase,pw,day,adapt){
+  const P=PH[phase];let title=P.titles[day],focus=P.focus[day];
+  let pair=[...P.pairs[day]];
+  if(phase===4&&pw<=2)pair=pair.map(k=>k==='grit_leger'?'rire_silencieux':k==='grit_phrase'?'fry_onset':k);
+  if(adapt.noGrit)pair=pair.map(k=>EX[k].cat==='grit'?(pair.includes('messa_mix')?'gue_5':'messa_mix'):k);
+  if(adapt.swapBailler&&phase<=2&&!pair.includes('bailler'))pair[0]='bailler';
+  if(adapt.swapFals&&phase<=2&&!pair.includes('falsetto_desc'))pair[1]='falsetto_desc';
+  if(pair[0]===pair[1])pair[1]=phase===1?'ng_5':'gue_5';
+  let pi=0;
+  let items=P.tpl.map(([cat,dur])=>({key:cat==='paille'?P.paille[day]:cat==='passage'?pair[pi++]:cat==='appli'&&day===5?'bilan':cat,dur}));
+  if(adapt.light){items=[{key:'relax',dur:90},{key:'souffle',dur:60},{key:'paille_sirene',dur:300},{key:'calme',dur:150}];title='Séance allégée';focus='Ta voix récupère : paille douce uniquement.';}
+  return{title,focus,items};
+}
+
+function today(){
+  if(!PROG)return null;const t=todayStr();
+  const adapt=getAdapt(PRE&&PRE.day===t?PRE.v:null);
+  return{doneToday:PROG.lastDate===t,sunday:new Date().getDay()===0,adapt,session:buildSession(PROG.phase,PROG.pw,PROG.sess,adapt),
+    testDue:!VOICE.test||daysBetween(VOICE.test,t)>=28,recDue:!LASTREC||daysBetween(LASTREC,t)>=7};
+}
+
+function checkGap(){
+  if(!PROG||!PROG.lastDate||PROG.gapFrom===PROG.lastDate)return;
+  const days=daysBetween(PROG.lastDate,todayStr());
+  if(days>=21){PROG.pw=Math.max(1,PROG.pw-1);PROG.sess=0;PROG.gapFrom=PROG.lastDate;NOTICE='Reprise après '+days+' jours de pause : on revient une semaine en arrière pour repartir en douceur.';save();}
+  else if(days>=10){PROG.sess=0;PROG.gapFrom=PROG.lastDate;NOTICE='Reprise après '+days+' jours de pause : on refait la semaine depuis le début.';save();}
+}
+
+function sessAcc(s){if(!s.m)return null;const v=Object.values(s.m).map(x=>x.acc).filter(x=>x!=null);return v.length?mean(v):null;}
+function weekGate(){
+  const last=SESSIONS.filter(s=>s.counted).slice(0,6),n=f=>last.filter(s=>f(s.q||{})).length,bad=[];
+  if(n(q=>q.voice==='gratte')>=2)bad.push('une voix qui gratte');
+  if(n(q=>q.larynx==='beaucoup')>=3)bad.push('une pomme d’Adam qui monte');
+  if(n(q=>q.passage==='crie')>=3)bad.push('un passage encore crié');
+  const acc=last.map(sessAcc).filter(x=>x!=null);
+  if(acc.length>=3&&mean(acc)<55)bad.push('une justesse encore fragile au micro');
+  return bad;
+}
+function advance(){
+  PROG.lastDate=todayStr();PROG.sess++;let msg=null;
+  if(PROG.sess>=6){PROG.sess=0;const P=PH[PROG.phase];
+    if(PROG.pw>=P.weeks){const bad=weekGate();
+      if(PROG.phase<4&&bad.length){PROG.repeats=(PROG.repeats||0)+1;msg='Semaine de consolidation : cette semaine montrait encore '+bad.join(' et ')+'. On refait la dernière semaine de la phase '+PROG.phase+' avant de passer à la suite.';}
+      else if(PROG.phase<4){PROG.phase++;PROG.pw=1;msg='🎉 Phase '+PROG.phase+' débloquée : '+PH[PROG.phase].name+'. Pense à refaire le test de voix.';}
+      else{PROG.cycle=(PROG.cycle||1)+1;PROG.phase=2;PROG.pw=1;msg='🏆 Programme de 26 semaines terminé ! Refais le test de voix. Le cycle '+PROG.cycle+' reprend à la phase 2, recalé sur ta nouvelle voix.';}}
+    else{PROG.pw++;msg='Semaine '+weekNum()+' débloquée.';}}
+  return msg;
+}
+
+function applyRating(key,d){
+  if(!RATINGS[key])RATINGS[key]=[];RATINGS[key].push(d);RATINGS[key]=RATINGS[key].slice(-6);
+  const r=RATINGS[key].slice(-3);
+  if(r.length>=2){const avg=r.reduce((a,b)=>a+b,0)/r.length;
+    if(avg>=4.2){PITCH[key]=Math.max(-3,(PITCH[key]||0)-1);TEMPO[key]=Math.max(.85,(TEMPO[key]||1)-.05);RATINGS[key]=[];}
+    else if(avg<=1.8){if((TEMPO[key]||1)<1)TEMPO[key]=1;else PITCH[key]=Math.min(3,(PITCH[key]||0)+1);RATINGS[key]=[];}}
+}
+function pitchLabel(key){const o=PITCH[key]||0;if(!o)return null;return(o>0?'+':'')+o+' demi-ton'+(Math.abs(o)>1?'s':'');}
+
+// Tonalité conseillée pour un morceau : now = sans risque aujourd'hui, mix = objectif une fois le mix construit
+function transp(s){if(!s||!s.hi)return null;const hi=n2m(s.hi),safe=n2m(VOICE.chestMax)-1,mix=Math.min(n2m(VOICE.falsMax)-2,n2m(VOICE.passage)+3);
+  const sh=t=>Math.min(0,t-hi),inMix=PROG&&PROG.phase>=3,now=sh(inMix?mix:safe);
+  return{now,mix:sh(mix),top:hi+now,low:s.lo?n2m(s.lo)+now<n2m(VOICE.low):false,inMix};}
+
+let WL=null;
+async function wake(on){try{if(on&&'wakeLock' in navigator&&!WL){WL=await navigator.wakeLock.request('screen');WL.addEventListener('release',()=>{WL=null;});}else if(!on&&WL){await WL.release();WL=null;}}catch(e){}}
+
+// ═══════════════════════════════════
+// SÉANCE — machine à états
+// ═══════════════════════════════════
+const WK={
+  state:'idle',items:[],idx:0,timeLeft:0,total:0,endAt:0,timer:null,mt:null,mIdx:0,adapt:null,offset:0,kind:'prog',
+  ratings:{},metrics:{},lastMet:null,cur:0,Q:{},notes:'',counted:true,title:'',cueIdx:-1,cfg:null,quitArm:0,
+  load(sess,adapt,counted,kind){this.stopAll();this.items=sess.items;this.title=sess.title;this.adapt=adapt;this.offset=adapt.offset||0;this.counted=counted;this.kind=kind||'prog';
+    this.idx=0;this.ratings={};this.metrics={};this.cur=0;this.Q={};this.notes='';this.state='ready';this.prep();this.snap();},
+  snap(){if(this.state==='idle'){LS.d('wk');return;}
+    LS.s('wk',{day:todayStr(),items:this.items,title:this.title,adapt:this.adapt,counted:this.counted,kind:this.kind,idx:this.idx,ratings:this.ratings,metrics:this.metrics,quest:this.state==='quest'});},
+  restore(s){this.stopAll();this.items=s.items;this.title=s.title;this.adapt=s.adapt||{offset:0};this.offset=this.adapt.offset||0;this.counted=s.counted;this.kind=s.kind||'prog';
+    this.idx=Math.min(s.idx,s.items.length-1);this.ratings=s.ratings||{};this.metrics=s.metrics||{};this.cur=0;this.Q={};this.notes='';
+    if(s.quest)this.state='quest';else{this.state='ready';this.prep();}},
+  ex(){return EX[this.items[this.idx]?.key];},
+  key(){return this.items[this.idx]?.key;},
+  prep(){const it=this.items[this.idx];if(!it)return;this.timeLeft=it.dur;this.total=it.dur;this.cueIdx=-1;this.lastMet=null;this.cfg=resolveAudio(it.key,this.offset,PROG?PROG.phase:1);},
+  stopAll(){clearInterval(this.timer);clearInterval(this.mt);this.timer=null;Aud.stop();hush();},
+  go(){const ex=this.ex();if(!ex)return;this.state='running';this.mIdx=Math.floor(Math.random()*MOTIV.length);
+    Aud.start(this.cfg);wake(true);
+    const meas=()=>{if(Mic.on&&SET.hp&&this.cfg.type!=='guided'&&this.state==='running'&&!MET.on)MET.begin(this.cfg.type);};
+    if(MICPREF&&!Mic.on)Mic.start().then(ok=>{if(!ok){MICPREF=false;save();}meas();if(TAB==='wkt')renderWkt();});else meas();
+    this.endAt=Date.now()+this.timeLeft*1000;
+    this.timer=setInterval(()=>this.tick(),250);
+    this.mt=setInterval(()=>{this.mIdx=(this.mIdx+1)%MOTIV.length;const el=$('motiv');if(el){el.style.opacity='0';setTimeout(()=>{el.textContent=MOTIV[this.mIdx];el.style.opacity='1';},400);}},30000);
+    renderWkt();},
+  tick(){const left=Math.ceil((this.endAt-Date.now())/1000);if(left===this.timeLeft)return;this.timeLeft=Math.max(0,left);
+    if(this.timeLeft<=0){this.finishEx(false);Aud.chime();return;}updRun();},
+  pause(){if(this.state==='running'){this.state='paused';this.cfg.start=Aud.pos;this.stopAll();}else if(this.state==='paused'){this.go();return;}renderWkt();},
+  // skip=true : exercice passé (ni note, ni mesure)
+  finishEx(skip){const done=this.total-this.timeLeft;if(this.state==='ready'||done<this.total*.4)skip=true;
+    this.stopAll();stopTake();const m=MET.end(),ex=this.ex(),k=this.key();
+    if(!skip&&m){this.metrics[k]=m;this.lastMet=m;}else this.lastMet=null;
+    if(!skip&&ex&&(ex.rate||m)){this.state='rating';this.cur=0;this.snap();renderWkt();}else this.next();},
+  rate(d){this.cur=d;renderWkt();},
+  confirmRating(){const ex=this.ex();if(ex.rate&&!this.cur)return;if(ex.rate){const k=this.key();this.ratings[k]=this.cur;applyRating(k,this.cur);save();}this.next();},
+  next(){this.stopAll();this.idx++;
+    if(this.idx>=this.items.length){Mic.stop();wake(false);if(this.kind==='express'){finishExpress();return;}this.state='quest';}
+    else{this.state='ready';this.prep();}
+    this.snap();renderWkt();window.scrollTo(0,0);},
+  quit(){if(Date.now()-this.quitArm<3000){this.stopAll();stopTake();MET.end();Mic.stop();wake(false);this.state='idle';this.snap();sw('auj');showToast('Séance abandonnée');}
+    else{this.quitArm=Date.now();showToast('Touche encore « Quitter » pour confirmer');}},
+  left(){let s=this.timeLeft;for(let i=this.idx+1;i<this.items.length;i++)s+=this.items[i].dur;return s;}
+};
+function finishExpress(){SESSIONS.unshift({id:Date.now(),date:new Date().toISOString(),day:todayStr(),phase:PROG.phase,week:weekNum(),title:WK.title,keys:WK.items.map(i=>i.key),ratings:{},m:WK.metrics,counted:false,express:true,mins:5});
+  save();WK.state='idle';WK.items=[];WK.snap();showToast('Échauffement terminé · bonne scène 🎤');sw('auj');}
+
+// ═══════════════════════════════════
+// RENDU
+// ═══════════════════════════════════
+let TAB='auj';
+function sw(tab){TAB=tab;
+  document.querySelectorAll('.nb').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='page-'+tab));
+  if(tab==='auj')rAuj();else if(tab==='wkt')renderWkt();else if(tab==='prg')rPrg();else if(tab==='jnl')rJnl();}
+function updStreak(){$('sk').textContent=curStreak();}
+
+function sessionList(s){return s.items.map((it,i)=>{const ex=EX[it.key],pl=pitchLabel(it.key);
+  return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;${i<s.items.length-1?'border-bottom:.5px solid rgba(255,255,255,.04)':''}">
+    <div style="font-size:22px;flex-shrink:0">${ex.icon}</div>
+    <div style="flex:1"><div style="font-size:13px">${ex.name}${pl?` <span style="font-size:10px;color:var(--violet)">(${pl})</span>`:''}</div>
+    <div style="font-size:11px;color:var(--t3)">${CATS[ex.cat]}</div></div>
+    <div style="font-size:11px;color:var(--t3)">${fmt(it.dur)}</div></div>`;}).join('');}
+
+function rAuj(){
+  const el=$('page-auj');updStreak();
+  if(!PROG){el.innerHTML=`<div class="rest"><div class="rest-icon">🎤</div><div class="rest-title">Programme non démarré</div><div class="rest-sub" style="margin-bottom:20px">20 minutes par jour, réglées sur ta voix.</div><button class="btn btn-gold" onclick="showOB()">Configurer →</button></div>`;return;}
+  const T=today(),P=PH[PROG.phase],rgb=h2r(P.color),s=T.session,mins=Math.round(s.items.reduce((a,i)=>a+i.dur,0)/60);
+  const prog=Math.min(100,Math.round(((weekNum()-1)+PROG.sess/6)/26*100));
+  const snap=LS.g('wk',null),canResume=snap&&snap.day===todayStr()&&WK.state==='idle';
+  let h='';
+  if(canResume)h+=`<div class="goldbox">⏯️ Une séance est en cours (${esc(snap.title)}, exercice ${Math.min(snap.idx+1,snap.items.length)}/${snap.items.length}).<div class="run-btns" style="margin-top:8px"><button class="btn-sm btn-sm-gold" onclick="resumeWkt()">Reprendre</button><button class="btn-sm btn-sm-ghost" onclick="LS.d('wk');rAuj()">Abandonner</button></div></div>`;
+  if(NOTICE)h+=`<div class="adapt">${esc(NOTICE)}</div>`;
+  if(T.testDue)h+=`<div class="goldbox">🎯 ${VOICE.test?'Ça fait 4 semaines depuis ton dernier test de voix. Refais-le':'Fais le test de voix'} (10 min) pour que les exercices suivent ta voix réelle. <button class="btn-sm btn-sm-gold" style="margin-top:8px;display:block" onclick="showTest()">Faire le test</button></div>`;
+  const hero=(label)=>`<div class="hero" style="background:linear-gradient(135deg,rgba(${rgb},.08),rgba(${rgb},.01));border-color:rgba(${rgb},.22)">
+      <div class="htag" style="color:${P.color}">Phase ${PROG.phase} · ${P.name} · Semaine ${weekNum()}/26${PROG.cycle>1?' · Cycle '+PROG.cycle:''}</div>
+      <div class="hname">${label}${s.title}</div>
+      <div class="hsub">${s.focus}<br><span style="color:var(--t3)">Séance ${PROG.sess+1}/6 de la semaine · ${mins} min</span></div>
+      <div class="pbar"><div class="pfill" style="width:${prog}%;background:linear-gradient(90deg,${P.color}88,${P.color})"></div></div></div>`;
+  if(T.doneToday){
+    h+=`<div class="rest" style="padding:24px 10px 14px"><div class="rest-icon">✅</div><div class="rest-title">Séance du jour faite</div><div class="rest-sub">20 minutes, c’est le bon dosage. Ta voix travaille aussi pendant le repos.</div></div>
+      ${hero('Demain · ')}
+      <div class="card"><div class="ctitle">Au programme demain</div>${sessionList(s)}</div>
+      <button class="link" onclick="startWkt(false)">Lancer quand même (ne compte pas dans la progression)</button>`;
+  }else{
+    if(T.adapt.warn)h+=`<div class="warnbox">⚠️ ${T.adapt.warn}</div>`;
+    else if(T.sunday)h+=`<div class="adapt" style="color:var(--t2);background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08)">🛌 Dimanche : un jour de repos par semaine est conseillé, et ta série n’est pas cassée. Si tu as envie de chanter, la séance est prête.</div>`;
+    h+=hero('');
+    if(T.adapt.notes.length)h+=`<div class="adapt">📊 Adapté à ta voix :<br>${T.adapt.notes.map(n=>'· '+n).join('<br>')}</div>`;
+    h+=`<div class="rule">📏 <span>${phaseRule(PROG.phase)}</span></div>
+      <div class="card"><div class="ctitle">Au programme · ${mins} min</div>${sessionList(s)}</div>
+      <button class="btn btn-gold" onclick="startWkt(true)">▶ Commencer la séance</button><div style="height:10px"></div>`;
+  }
+  h+=`<button class="btn btn-ghost" style="margin-bottom:12px;font-size:12px" onclick="startExpress()">⚡ Échauffement express · 5 min avant de chanter</button>`;
+  h+=songCard(T);
+  if(SESSIONS.length>=3&&(!LASTEXP||daysBetween(LASTEXP,todayStr())>=14))h+=`<div class="adapt" style="color:var(--t2);background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08)">💾 Pense à sauvegarder tes données (onglet Progrès → Exporter).</div>`;
+  el.innerHTML=h;
+}
+function songCard(T){const s=curSong();
+  if(!s)return`<div class="card"><div class="ctitle">Morceau objectif</div><div style="font-size:13px;color:var(--t2);line-height:1.5">Ajoute tes morceaux dans l’onglet <strong style="color:var(--gl)">Progrès</strong> : l’objectif sert dans chaque séance et pour l’enregistrement de la semaine.</div></div>`;
+  const tr=transp(s);
+  return`<div class="song-hero"><div style="font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--teal);margin-bottom:4px">🎵 Morceau objectif</div>
+    <div class="song-big">${esc(s.title)}</div>${tr?`<div style="font-size:12px;color:var(--t2)">${trLine(tr)}</div>`:''}
+    <div style="font-size:12px;color:var(--t2);margin-top:6px">${T.recDue?'⚡ Enregistrement de la semaine à faire : il est prévu dans la séance « Bilan ».':'✓ Enregistrement de la semaine fait.'}</div></div>`;
+}
+function trLine(tr){return tr.now?`Tonalité conseillée aujourd’hui : <b style="color:var(--gl)">${tr.now} demi-ton${tr.now<-1?'s':''}</b> (sommet à ${m2n(tr.top)})`:`Tonalité d’origine possible (sommet à ${m2n(tr.top)})`;}
+
+// ── Check-in avant séance ──
+function startWkt(counted){
+  const T=today();if(!T){showToast('Configure d’abord le programme');return;}
+  if(!PRE||PRE.day!==todayStr()){showCheck(counted);return;}
+  const c=counted&&!T.doneToday;
+  WK.load(T.session,T.adapt,c,'prog');sw('wkt');
+}
+function showCheck(counted){
+  $('ov-in').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:22px"><div class="brand">Avant de commencer</div><button class="btn-sm btn-sm-ghost" onclick="closeOv()">Fermer</button></div>
+    <div class="ob-title" style="font-size:22px;margin-bottom:6px">Ta voix, là maintenant ?</div><div class="ob-sub" style="margin-bottom:18px">Dis une phrase à voix haute, puis choisis. La séance s’adapte.</div>
+    <button class="big-opt" onclick="setPre('normale',${counted})"><span class="e">🟢</span><span>Normale<small>Séance complète de 20 min</small></span></button>
+    <button class="big-opt" onclick="setPre('fatigue',${counted})"><span class="e">🟡</span><span>Un peu fatiguée<small>Volume 4/10, pas de grit</small></span></button>
+    <button class="big-opt" onclick="setPre('gratte',${counted})"><span class="e">🔴</span><span>Ça gratte ou c’est enroué<small>Séance allégée de 10 min, paille uniquement</small></span></button>`;
+  $('ov').style.display='block';$('ov').scrollTop=0;
+}
+function setPre(v,counted){PRE={day:todayStr(),v};save();closeOv();startWkt(counted);}
+function startExpress(){if(!PROG){showToast('Configure d’abord le programme');return;}WK.load(EXPRESS,{offset:0,notes:[]},false,'express');sw('wkt');}
+function resumeWkt(){const s=LS.g('wk',null);if(!s)return;WK.restore(s);sw('wkt');}
+
+function noteTracker(){const c=WK.cfg,r=rangeOf(c);if(!r)return'';
+  const P=n2m(VOICE.passage),pos=Math.max(0,Math.min(100,(P-r[0])/Math.max(1,r[1]-r[0])*100)),showP=P>=r[0]&&P<=r[1];
+  return`<div class="note-tracker"><div class="note-name-big" id="note-name">—</div><div class="note-solf" id="note-solf"></div>
+    <div class="note-bar-wrap" style="margin-top:14px"><div class="note-bar-track"><div class="note-bar-fill" id="note-fill" style="width:0%"></div>
+      ${showP?`<div class="pmark" style="left:${pos}%"></div><div class="pmark-l" style="left:${pos}%">passage</div>`:''}</div>
+      <div class="note-bar-dot" id="note-dot"></div></div>
+    <div class="note-bar-labels"><span>${m2n(r[0])}</span><span>${m2n(r[1])}</span></div></div>`;}
+
+// L'accordeur en direct s'efface au fil des phases : le retour permanent aide sur le moment mais freine l'apprentissage.
+function liveNow(){if(WK.cfg&&WK.cfg.type==='guided')return true;if(SET.live==='on')return true;if(SET.live==='off')return false;
+  const p=PROG?PROG.phase:1;return p===1||(p===2&&WK.timeLeft>WK.total/2);}
+function metCard(m){if(!m)return'';const c=v=>v>=80?'var(--teal)':v>=60?'var(--gl)':'var(--coral)';
+  let h=`<div class="mets"><div class="met"><b style="color:${c(m.acc)}">${m.acc} %</b><span>Justesse</span></div>`;
+  if(m.stab!=null)h+=`<div class="met"><b style="color:${m.stab<=20?'var(--teal)':m.stab<=40?'var(--gl)':'var(--coral)'}">± ${m.stab} ¢</b><span>Stabilité</span></div>`;
+  if(m.brk!=null)h+=`<div class="met"><b style="color:${m.brk<=1?'var(--teal)':m.brk<=4?'var(--gl)':'var(--coral)'}">${m.brk}</b><span>Accrocs</span></div>`;
+  if(m.over!=null)h+=`<div class="met"><b style="color:${m.over<=10?'var(--teal)':m.over<=30?'var(--gl)':'var(--coral)'}">${m.over} %</b><span>Trop fort</span></div>`;
+  return h+`</div><div style="font-size:10px;color:var(--t3);margin-bottom:8px">Mesures du micro : indicatives, à comparer d’une séance à l’autre.</div>`;}
+
+function renderWkt(){
+  const el=$('page-wkt');
+  if(WK.state==='idle'){el.innerHTML=`<div class="rest"><div class="rest-icon">🎤</div><div class="rest-title">Prêt à chanter ?</div><div class="rest-sub">Démarre la séance depuis l’onglet <strong>Auj.</strong></div></div>`;return;}
+  if(WK.state==='quest'){renderQ(el);return;}
+  const ex=WK.ex(),key=WK.key(),pc=PH[PROG.phase].color,pl=pitchLabel(key),c=WK.cfg,r=rangeOf(c),core=ex.cat==='passage'||ex.cat==='grit';
+  const dots=`<div class="dots-row">${WK.items.map((_,i)=>`<div class="dot ${i===WK.idx?'cur':''}" style="${i===WK.idx?'background:'+pc:i<WK.idx?'background:var(--teal)':''}"></div>`).join('')}
+    <span style="font-size:11px;color:var(--t3);margin-left:auto">${WK.idx+1}/${WK.items.length} · ${fmt(WK.left())} restantes</span></div>`;
+  const ruleH=(core||ex.cat==='appli')?`<div class="rule">📏 <span>${phaseRule(PROG.phase)}</span></div>`:'';
+
+  if(WK.state==='ready'){
+    const rnd=c.type==='phrase'&&PROG.phase>=2&&core;
+    el.innerHTML=`${dots}<div class="ex-card"><div class="ex-cat">${CATS[ex.cat]} · ${fmt(WK.total)}</div><div class="ex-icon">${ex.icon}</div>
+      ${r?`<span class="badge badge-g">🎹 ${m2n(r[0])} → ${m2n(r[1])}</span>`:''}${pl?`<span class="badge badge-v">🎚️ Hauteur adaptée : ${pl}</span>`:''}${WK.offset&&core?`<span class="badge badge-v">↓ ${WK.offset} demi-ton aujourd’hui</span>`:''}${rnd?`<span class="badge badge-v">🔀 Tonalités mélangées</span>`:''}
+      <span class="badge ${ex.ev==='s'?'badge-t':'badge-n'}">${ex.ev==='s'?'📚 Étayé par des études':'🎓 Pratique de coach'}</span>
+      <div class="ex-name">${ex.name}</div><div class="ex-sub">${ex.sub}</div>
+      <div class="ex-steps">${ex.steps.map((s,i)=>`<div class="ex-step"><span class="ex-sn">${i+1}</span><span class="ex-st">${s}</span></div>`).join('')}</div>
+      <div class="ex-tip"><span style="font-size:14px;flex-shrink:0">💡</span><span>${ex.tip}</span></div></div>
+      ${ruleH}
+      <button class="btn btn-gold" onclick="WK.go()">▶ Démarrer</button>
+      <div class="run-btns" style="margin-top:8px"><button class="btn btn-ghost" style="flex:1;font-size:12px;min-height:42px;padding:10px" onclick="WK.finishEx(true)">Passer cet exercice</button><button class="btn btn-ghost" style="flex:.6;font-size:12px;min-height:42px;padding:10px" onclick="WK.quit()">Quitter</button></div>
+      <div style="height:12px"></div>`;
+    return;
+  }
+  if(WK.state==='rating'){
+    const last=WK.idx>=WK.items.length-1,ok=!ex.rate||WK.cur;
+    el.innerHTML=`${dots}<div class="rating-card"><div style="font-size:36px">${ex.icon}</div><div style="font-family:Georgia,serif;font-size:16px;margin-top:4px">${ex.name}</div>
+      ${metCard(WK.lastMet)}
+      ${ex.rate?`<div class="rating-q">C’était comment ?</div>
+      <div class="diff-row">${DIFF.map((d,i)=>`<button class="diff-btn${WK.cur===i+1?' on':''}" onclick="WK.rate(${i+1})"><span class="diff-emoji">${d.e}</span><span class="diff-lbl">${d.l.replace('\n','<br>')}</span></button>`).join('')}</div>
+      <div class="diff-scale"><span>Trop facile → plus haut</span><span>Trop dur → plus bas, plus lent</span></div>`:'<div style="height:10px"></div>'}
+      <button class="btn btn-gold" style="opacity:${ok?1:.4};pointer-events:${ok?'auto':'none'}" onclick="WK.confirmRating()">${last?(WK.kind==='express'?'Terminer →':'Voir le bilan →'):'Exercice suivant →'}</button></div>`;
+    return;
+  }
+  // running / paused
+  const guided=c.type==='guided',lim=loudLimit(),okPct=Math.round((lim+20)/40*100);
+  const body=guided?`<div class="cue" id="cue">…</div><div class="cue-next" id="cue-next"></div>`:noteTracker();
+  const takeH=ex.take?`<div style="margin-bottom:12px"><button class="btn btn-ghost${REC.mr?' btn-rec':''}" id="take-btn" style="min-height:44px;padding:10px;font-size:12px" onclick="toggleTake()">${REC.mr?'■ Arrêter':ex.keep?'● Enregistrer le refrain de la semaine':'● Enregistrer et réécouter'}</button><div id="take-box">${TAKE.html}</div></div>`:'';
+  el.innerHTML=`${dots}<div class="run-card"><div class="run-name">${ex.icon}  ${ex.name}</div><div class="run-sub">${ex.sub}</div>
+    ${body}${takeH}
+    <div class="tuner${Mic.on?' on':''}" id="tuner"><div class="tun-row"><div class="tun-note" id="tun-note">—</div><div class="tun-info"><span class="tun-cents" id="tun-cents">Chante…</span><br><span id="tun-zone">${!guided&&!SET.hp?'Sans écouteurs, le micro entend le piano : pas de score.':'Micro : ta note en direct'}</span></div></div>
+      ${VOICE.refDb!=null?`<div class="vol"><div class="vol-lbl"><span>Volume</span><span id="vol-txt">—</span></div><div class="vol-track" style="--ok:${okPct}%"><div class="vol-fill" id="vol-fill"></div></div></div>`:''}</div>
+    <div class="sound-row"><div class="sound-lbl">${WK.state==='paused'?'⏸ En pause':guided?'Suis les consignes':'Suis les notes'}</div><div class="breath-indicator" id="brth">Inspire →</div>
+      <button class="btn-sm btn-sm-ghost" style="min-height:32px;padding:6px 12px" onclick="toggleMic()">${Mic.on?'🎙️ Micro ON':'🎙️ Micro'}</button></div>
+    <div class="timer" id="tmr">${fmt(WK.timeLeft)}</div>
+    <div class="tbar"><div class="tfill" id="tfill" style="width:0%;background:${pc}"></div></div>
+    <div class="sess-left" id="sleft"></div>
+    <div id="motiv" style="text-align:center;font-family:Georgia,serif;font-style:italic;font-size:12px;color:var(--t3);min-height:30px;transition:opacity .5s;margin-bottom:10px">${MOTIV[WK.mIdx]}</div>
+    <div class="run-btns"><button class="btn btn-ghost" style="flex:1" onclick="WK.pause()">${WK.state==='paused'?'▶ Reprendre':'⏸ Pause'}</button>
+      <button class="btn btn-ghost" style="flex:.5;font-size:12px" onclick="WK.finishEx(false)">Fin →</button></div></div>
+    ${ruleH}`;
+  if(WK.state==='running'&&!guided){
+    Aud.onNote=(m,isGlide)=>{const nn=$('note-name'),ns=$('note-solf'),nd=$('note-dot'),nf=$('note-fill');
+      const pos=Math.max(0,Math.min(100,(m-Aud.lo)/Math.max(1,Aud.hi-Aud.lo)*100));
+      if(nn)nn.textContent=(isGlide?'↗ ':'')+m2n(m);if(ns)ns.textContent=(isGlide?'sommet : ':'')+m2s(m);
+      if(nd)nd.style.left='calc(10px + (100% - 20px) * '+(pos/100).toFixed(3)+')';if(nf)nf.style.width=pos+'%';};
+  }
+  Mic.onFrame=onFrame;
+  WK.cueIdx=-1;updRun();
+}
+function updRun(){
+  const t=$('tmr');if(!t)return;t.textContent=fmt(WK.timeLeft);t.classList.toggle('warn',WK.timeLeft<=10);
+  const f=$('tfill');if(f)f.style.width=Math.round((1-WK.timeLeft/WK.total)*100)+'%';
+  const sl=$('sleft');if(sl)sl.textContent='Séance : '+fmt(WK.left())+' restantes';
+  const ex=WK.ex();if(ex&&ex.cues&&$('cue')){
+    const cues=ex.cues(WK.total,PROG.phase),el=WK.total-WK.timeLeft;let ci=0;cues.forEach((c,i)=>{if(c[0]<=el)ci=i;});
+    if(ci!==WK.cueIdx){const firstShow=WK.cueIdx===-1;WK.cueIdx=ci;const cue=$('cue');cue.textContent=cues[ci][1];
+      if(WK.state==='running'&&!(firstShow&&el>cues[ci][0]+2)){if(ci>0)Aud.chime();speak(cues[ci][1]);}}
+    const nx=cues[ci+1],cn=$('cue-next');if(cn)cn.textContent=nx?'Consigne suivante dans '+Math.max(0,nx[0]-el)+' s':'Dernière consigne';
+  }
+}
+function onFrame(fr){
+  MET.frame(fr);
+  const vf=$('vol-fill');
+  if(vf&&VOICE.refDb!=null){const rel=fr.db-VOICE.refDb,lim=loudLimit(),p=Math.max(0,Math.min(100,(rel+20)/40*100)),loud=fr.raw!=null&&rel>lim;
+    vf.style.width=p+'%';vf.style.background=loud?'var(--coral)':'var(--teal)';const vt=$('vol-txt');if(vt){vt.textContent=fr.raw==null?'—':loud?'Trop fort : allège':'Bien';vt.style.color=loud?'var(--coral)':'var(--t3)';}}
+  const tn=$('tun-note'),tc=$('tun-cents'),tz=$('tun-zone');if(!tn)return;
+  const guided=WK.cfg&&WK.cfg.type==='guided';
+  if(!liveNow()){tn.textContent='🙈';tc.textContent='À l’oreille';tc.style.color='var(--t2)';tz.textContent='Ton score s’affiche à la fin de l’exercice';return;}
+  const m=fr.m;if(m==null){tc.textContent='Chante…';tc.style.color='var(--t2)';return;}
+  const tg=!guided&&SET.hp&&WK.state==='running'?Aud.targetAt(fr.t-Aud.latency()):null;
+  const P=n2m(VOICE.passage),lim=n2m(VOICE.chestMax)-1;
+  tn.textContent=m2n(m);
+  if(tg){const e=fold(m-tg.m),cents=Math.round(e*100),tol=tg.e.gl?80:30,ok=Math.abs(cents)<=tol;
+    tc.textContent=ok?'✓ Sur la note':(cents>0?'Trop haut':'Trop bas')+' · '+(cents>0?'+':'')+cents+' ¢';
+    tc.style.color=ok?'var(--teal)':Math.abs(cents)<=tol*2?'var(--gl)':'var(--coral)';}
+  else if(!guided&&SET.hp&&WK.state==='running'){tc.textContent='Entre deux notes';tc.style.color='var(--t2)';}
+  else{const nearest=Math.round(m),cents=Math.round((m-nearest)*100),ok=Math.abs(cents)<=15;
+    tc.textContent=ok?'✓ Juste':(cents>0?'+':'')+cents+' ¢ '+(cents>0?'(un peu haut)':'(un peu bas)');
+    tc.style.color=ok?'var(--teal)':Math.abs(cents)<=35?'var(--gl)':'var(--coral)';}
+  tz.textContent=Math.abs(m-P)<=1.5?'🌉 Zone de passage : allège':(PROG.phase===1&&m>lim+.5)?'⬆️ Au-dessus de '+m2n(lim)+' : voix légère':m2s(m);
+}
+async function toggleMic(){
+  if(Mic.on){MET.end();Mic.stop();MICPREF=false;save();renderWkt();return;}
+  const ok=await Mic.start();MICPREF=ok;save();
+  if(!ok)showToast('Micro inaccessible : autorise-le dans le navigateur');
+  else{showToast(SET.hp?'Micro activé · score à la fin de l’exercice':'Micro activé · mets des écouteurs pour obtenir un score');
+    if(SET.hp&&WK.state==='running'&&WK.cfg.type!=='guided'&&!MET.on)MET.begin(WK.cfg.type);}
+  renderWkt();
+}
+
+// ── Essais enregistrés pendant la séance ──
+const TAKE={html:'',urls:[],tm:null};
+function stopTake(){clearInterval(TAKE.tm);TAKE.html='';TAKE.urls.forEach(u=>URL.revokeObjectURL(u));TAKE.urls=[];if(REC.mr){try{REC.stop(false);}catch(e){}}}
+async function toggleTake(){
+  const ex=WK.ex();if(!ex||!ex.take)return;
+  if(REC.mr){clearInterval(TAKE.tm);const o=await REC.stop(!!ex.keep);if(!o)return;
+    TAKE.urls.forEach(u=>URL.revokeObjectURL(u));TAKE.urls=[];const u=URL.createObjectURL(o.blob);TAKE.urls.push(u);
+    let h=`<div style="font-size:11px;color:var(--t3);margin-top:8px">Aujourd’hui · ${fmt(o.dur)}</div><audio controls src="${u}"></audio>`;
+    if(ex.keep){LASTREC=todayStr();save();try{const all=await REC.all();if(all.length>1){const r=all[0],ru=URL.createObjectURL(r.blob);TAKE.urls.push(ru);
+        h=`<div style="font-size:11px;color:var(--t3);margin-top:8px">⭐ Référence · ${fmtD(r.date)}</div><audio controls src="${ru}"></audio>`+h;}
+      else h+=`<div style="font-size:11px;color:var(--t3);margin-top:6px">C’est ta référence : les prochaines semaines seront comparées à celle-ci.</div>`;}catch(e){}
+      showToast('Enregistrement de la semaine sauvegardé ✓');}
+    TAKE.html=h;const b=$('take-box');if(b)b.innerHTML=h;const bt=$('take-btn');if(bt){bt.classList.remove('btn-rec');bt.textContent=ex.keep?'● Réenregistrer':'● Enregistrer et réécouter';}
+    return;}
+  try{hush();await REC.start();const bt=$('take-btn');if(bt)bt.classList.add('btn-rec');
+    TAKE.tm=setInterval(()=>{const b=$('take-btn');if(b&&REC.mr)b.textContent='■ Arrêter · '+fmt((Date.now()-REC.t0)/1000);},500);}
+  catch(e){showToast('Enregistrement impossible : autorise le micro');}
+}
+
+function renderQ(el){
+  const mins=Math.round(WK.items.reduce((a,i)=>a+i.dur,0)/60);
+  const sel=(q,v)=>q.multi?(WK.Q[q.k]||[]).includes(v):WK.Q[q.k]===v;
+  el.innerHTML=`<div class="cel-wrap"><div class="cel-icon">🏆</div><div class="cel-title">Séance terminée</div>
+    <div class="cel-sub">${WK.items.length} exercices · ${mins} min${WK.counted?'':' · ne compte pas dans la progression'}<br>5 réponses rapides pour adapter la prochaine séance.</div></div>
+    <div class="card">${QS.map(q=>`<div class="q-block"><div class="q-lbl">${q.l()}</div><div class="q-opts">${q.o.map(([v,l])=>`<button class="qo ${sel(q,v)?'on':''}" onclick="setQ('${q.k}','${v}')">${l}</button>`).join('')}</div></div>`).join('')}
+      <div class="q-lbl" style="margin-bottom:6px">Notes libres (optionnel)</div>
+      <textarea rows="2" placeholder="Ce qui a marché, ce qui coince…" oninput="WK.notes=this.value">${esc(WK.notes)}</textarea></div>
+    <button class="btn btn-gold" onclick="submitSession()">Enregistrer la séance →</button><div style="height:12px"></div>`;
+}
+function setQ(k,v){const q=QS.find(x=>x.k===k);
+  if(q.multi){let a=WK.Q[k]||[];if(v==='aucune')a=['aucune'];else{a=a.filter(x=>x!=='aucune');a=a.includes(v)?a.filter(x=>x!==v):a.concat(v);}WK.Q[k]=a;}
+  else WK.Q[k]=v;
+  const y=window.scrollY;renderWkt();window.scrollTo(0,y);}
+function submitSession(){
+  if(QS.some(q=>q.multi?!(WK.Q[q.k]||[]).length:!WK.Q[q.k])){showToast('Réponds aux 5 questions');return;}
+  const t=todayStr(),counted=WK.counted&&PROG.lastDate!==t;
+  SESSIONS.unshift({id:Date.now(),date:new Date().toISOString(),day:t,phase:PROG.phase,week:weekNum(),title:WK.title,keys:WK.items.map(i=>i.key),ratings:WK.ratings,m:WK.metrics,q:{...WK.Q},notes:WK.notes,counted,mins:Math.round(WK.items.reduce((a,i)=>a+i.dur,0)/60)});
+  if(ST.last!==t){ST.streak=ST.last&&daysBetween(ST.last,t)<=2?ST.streak+1:1;ST.last=t;}
+  ST.total++;
+  NOTICE=null;if(counted)NOTICE=advance();
+  const grat=WK.Q.voice==='gratte';
+  WK.state='idle';WK.items=[];WK.snap();save();
+  showToast(grat?'Séance enregistrée · repos vocal ce soir':'Séance enregistrée 🎤');sw('auj');
+}
+
+// ── PROGRÈS ─────────────────────────────────────
+function spark(vals,color,suffix,lowerBetter){
+  if(vals.length<2)return`<div style="font-size:11px;color:var(--t3);padding:6px 0 2px">Pas encore assez de séances mesurées au micro.</div>`;
+  const mn=Math.min(...vals),mx=Math.max(...vals),sp=Math.max(1,mx-mn),W=300,H=54;
+  const pts=vals.map((v,i)=>[(i/(vals.length-1))*(W-12)+6,H-8-((v-mn)/sp)*(H-18)]);
+  const last=pts[pts.length-1],d=vals[vals.length-1]-vals[0],good=lowerBetter?d<0:d>0;
+  return`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none"><polyline fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3.5" fill="${color}"/></svg>
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t3)"><span>début : ${Math.round(vals[0])}${suffix}</span><span style="color:${d===0?'var(--t3)':good?'var(--teal)':'var(--coral)'}">${d>0?'+':''}${Math.round(d)}${suffix} depuis le début</span></div>`;}
+function chartsCard(){
+  const ss=SESSIONS.filter(s=>s.m&&Object.keys(s.m).length).slice().reverse();
+  const col=f=>ss.map(s=>{const v=Object.values(s.m).map(f).filter(x=>x!=null);return v.length?mean(v):null;}).filter(x=>x!=null);
+  const acc=col(x=>x.acc),stab=col(x=>x.stab),brk=col(x=>x.brk),over=col(x=>x.over);
+  const ch=(t,v,c,suf,low)=>`<div class="chart"><div class="chart-h"><span>${t}</span><b>${v.length?Math.round(v[v.length-1])+suf:'—'}</b></div>${spark(v,c,suf,low)}</div>`;
+  return`<div class="card"><div class="ctitle">Mesures au micro · par séance</div>
+    ${ch('Justesse (temps passé sur la note)',acc,'#35B589',' %',false)}${ch('Stabilité des notes tenues (plus bas = mieux)',stab,'#E5B347',' ¢',true)}${ch('Accrocs par exercice de sirènes',brk,'#A8A0E8','',true)}${ch('Temps passé trop fort',over,'#D96040',' %',true)}
+    <div style="font-size:11px;color:var(--t3);line-height:1.5">Ces courbes viennent du micro, avec des écouteurs. Elles ne voient ni ta pomme d’Adam ni la poussée : le questionnaire reste utile.</div></div>`;
+}
+function rPrg(){
+  const el=$('page-prg');
+  const phases=[1,2,3,4].map(p=>{const P=PH[p],cur=PROG&&PROG.phase===p,done=PROG&&PROG.phase>p;
+    const pct=done?100:cur?Math.round(((PROG.pw-1)+PROG.sess/6)/P.weeks*100):0;
+    return`<div class="ph-row"><div class="ph-num" style="background:${P.color};opacity:${done||cur?1:.35}">${done?'✓':p}</div>
+      <div class="ph-info">${P.name}${cur?' <span style="color:var(--gl);font-size:11px">· en cours</span>':''}<small>${P.weeks} semaines · ${P.goal}</small>
+      <div class="pbar" style="margin-top:5px"><div class="pfill" style="width:${pct}%;background:${P.color}"></div></div></div></div>`;}).join('');
+  const hist=VH.length>1?`<div style="font-size:11px;color:var(--t3);line-height:1.7;margin-bottom:10px">${VH.slice(-4).map(v=>`${fmtD(v.test)} : pleine ${v.chestMax} · passage ${v.passage} · falsetto ${v.falsMax}`).join('<br>')}</div>`:'';
+  el.innerHTML=`
+    <div class="card"><div class="ctitle">Tes repères vocaux</div>
+      <div class="kv"><span>Note grave confortable</span><b>${VOICE.low}</b></div>
+      <div class="kv"><span>Voix pleine max</span><b>${VOICE.chestMax}</b></div>
+      <div class="kv"><span>Passage</span><b>${VOICE.passage}</b></div>
+      <div class="kv"><span>Falsetto max</span><b>${VOICE.falsMax}</b></div>
+      <div style="font-size:11px;color:var(--t3);margin:8px 0 10px">${VOICE.test?'Test du '+new Date(VOICE.test).toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'}):'Valeurs de départ, test à faire'} · tous les exercices sont calés sur ton passage.</div>${hist}
+      <button class="btn btn-ghost" style="min-height:44px;padding:11px;font-size:12px" onclick="showTest()">🎯 ${VOICE.test?'Refaire':'Faire'} le test guidé (10 min)</button></div>
+    ${chartsCard()}
+    <div class="card"><div class="ctitle">Répertoire</div><div id="songs"></div></div>
+    <div class="card"><div class="ctitle">Enregistrements de la semaine</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.55;margin-bottom:12px">Le même refrain chaque semaine, a cappella, à la même distance du téléphone. Il est prévu dans la séance « Bilan » ; tu peux aussi enregistrer ici.</div>
+      <button class="btn ${REC.mr?'btn-rec':'btn-gold'}" id="rec-btn" onclick="toggleRec()">${REC.mr?'■ Arrêter':'● Enregistrer'}</button>
+      <div id="rec-list" style="margin-top:10px;font-size:12px;color:var(--t3)">Chargement…</div></div>
+    <div class="card"><div class="ctitle">Le plan · 26 semaines</div>${phases}</div>
+    <div class="card"><div class="ctitle">Réglages</div><div id="settings"></div></div>
+    <div class="card"><div class="ctitle">Sauvegarde</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.55;margin-bottom:12px">Tes données restent dans ce navigateur. Exporte-les toutes les deux semaines. Les enregistrements audio se téléchargent un par un.</div>
+      <div class="run-btns"><button class="btn btn-ghost" style="flex:1;min-height:44px;padding:11px;font-size:12px" onclick="exportData()">⬇ Exporter</button><button class="btn btn-ghost" style="flex:1;min-height:44px;padding:11px;font-size:12px" onclick="$('imp').click()">⬆ Importer</button></div></div>
+    <div style="height:12px"></div>`;
+  renderSongs();renderSettings();renderRecs();
+}
+
+// ── Répertoire ──
+const STAT=['À travailler','En cours','Prêt pour la scène'],STATC=['var(--t3)','var(--gl)','var(--teal)'];
+function noteOpts(sel,a,b,blank){let o=blank?`<option value="">${blank}</option>`:'';for(let m=a;m<=b;m++){const n=m2n(m);o+=`<option value="${n}"${n===sel?' selected':''}>${n} · ${m2s(m)}</option>`;}return o;}
+function renderSongs(){const box=$('songs');if(!box)return;
+  let h=SONGS.map(s=>{const tr=transp(s),cur=s.id===CUR;
+    return`<div class="song-row"><div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline"><span style="font-size:14px">${cur?'🎯 ':''}${esc(s.title)}</span><span style="font-size:10px;color:${STATC[s.st||0]};white-space:nowrap">● ${STAT[s.st||0]}</span></div>
+      <div style="font-size:11px;color:var(--t2);margin-top:3px;line-height:1.5">${s.hi?`Note la plus haute : ${s.hi}. ${trLine(tr)}${tr.mix!==tr.now?` · objectif une fois le mix construit : ${tr.mix||'tonalité d’origine'}${tr.mix?' demi-ton'+(tr.mix<-1?'s':''):''}`:''}${tr.low?'<br>⚠️ Le grave descendra sous ta note la plus basse : chante ces notes à l’octave.':''}`:'Indique sa note la plus haute pour obtenir la tonalité conseillée.'}</div>
+      <div class="song-btns">${cur?'':`<button class="btn-sm btn-sm-gold mini" onclick="songAct(${s.id},'cur')">Objectif</button>`}<button class="btn-sm btn-sm-ghost mini" onclick="songAct(${s.id},'st')">Statut</button><button class="btn-sm btn-sm-ghost mini" onclick="songAct(${s.id},'edit')">Modifier</button><button class="btn-sm btn-sm-ghost mini" onclick="songAct(${s.id},'del')">Suppr.</button></div></div>`;}).join('');
+  if(!SONGS.length)h=`<div style="font-size:12px;color:var(--t2);line-height:1.55;margin-bottom:10px">Liste ici les reprises que tu veux chanter. L’app calcule la tonalité qui convient à ta voix actuelle, et la recalcule après chaque test.</div>`;
+  h+=`<div style="margin-top:12px"><input type="hidden" id="song-id" value=""><div class="inp-row"><input type="text" id="song-in" placeholder="Titre — Artiste"></div>
+    <div class="frow"><div><div class="flbl">Note la plus haute (original)</div><select id="song-hi">${noteOpts('',52,84,'Je ne sais pas')}</select></div>
+      <div><div class="flbl">Note la plus grave (optionnel)</div><select id="song-lo">${noteOpts('',36,64,'—')}</select></div></div>
+    <div class="run-btns"><button class="btn btn-ghost" style="flex:1;min-height:44px;padding:10px;font-size:12px" id="cap-btn" onclick="capNote('song-hi')">🎙️ Capter la note haute</button><button class="btn btn-gold" style="flex:1;min-height:44px;padding:10px;font-size:12px" onclick="saveSong()">Enregistrer</button></div>
+    <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:8px">« Capter » : chante la note la plus haute du morceau original (en falsetto si besoin), l’app la lit en 5 secondes.</div></div>`;
+  box.innerHTML=h;}
+function saveSong(){const t=$('song-in').value.trim();if(!t){showToast('Indique un titre');return;}const id=+$('song-id').value,hi=$('song-hi').value,lo=$('song-lo').value;
+  if(id){const s=SONGS.find(x=>x.id===id);if(s){s.title=t;s.hi=hi;s.lo=lo;}}else{const s={id:Date.now(),title:t,hi,lo,st:0};SONGS.push(s);if(!CUR)CUR=s.id;}
+  save();renderSongs();showToast('Morceau enregistré ✓');}
+let DELARM={id:0,t:0};
+function songAct(id,a){const s=SONGS.find(x=>x.id===id);if(!s)return;
+  if(a==='cur'){CUR=id;showToast('Morceau objectif mis à jour');}
+  else if(a==='st')s.st=((s.st||0)+1)%3;
+  else if(a==='edit'){renderSongs();$('song-id').value=id;$('song-in').value=s.title;$('song-hi').value=s.hi||'';$('song-lo').value=s.lo||'';$('song-in').scrollIntoView({block:'center'});return;}
+  else if(a==='del'){if(DELARM.id!==id||Date.now()-DELARM.t>3000){DELARM={id,t:Date.now()};showToast('Touche encore « Suppr. » pour confirmer');return;}
+    SONGS=SONGS.filter(x=>x.id!==id);if(CUR===id)CUR=SONGS[0]?SONGS[0].id:null;}
+  save();renderSongs();}
+// Lit pendant 5 s la note stable la plus haute et la place dans le menu
+async function capNote(selId){const was=Mic.on;if(!await Mic.start()){showToast('Micro inaccessible');return;}
+  const b=$('cap-btn');let best=null,win=[];const prev=Mic.onFrame;if(b)b.textContent='🎙️ Chante la note… 5 s';
+  Mic.onFrame=f=>{if(f.raw==null){win=[];return;}win.push(f.raw);if(win.length>8)win.shift();
+    if(win.length===8&&Math.max(...win)-Math.min(...win)<1){const c=Math.round(median(win));if(best==null||c>best){best=c;if(b)b.textContent='🎙️ '+m2n(best)+'…';}}};
+  setTimeout(()=>{Mic.onFrame=prev;if(!was)Mic.stop();const s=$(selId),bb=$('cap-btn');if(bb)bb.textContent='🎙️ Capter la note haute';
+    if(best!=null&&s){s.value=m2n(Math.max(52,Math.min(84,best)));showToast('Note captée : '+m2n(best));}else showToast('Aucune note stable captée : réessaie plus près du micro');},5000);}
+
+// ── Réglages ──
+function renderSettings(){const box=$('settings');if(!box)return;
+  const tog=(k,l,d)=>`<div class="kv"><span>${l}${d?`<br><small style="color:var(--t3);font-size:11px">${d}</small>`:''}</span><button class="btn-sm ${SET[k]?'btn-sm-gold':'btn-sm-ghost'} mini" onclick="setSet('${k}',${!SET[k]})">${SET[k]?'Oui':'Non'}</button></div>`;
+  box.innerHTML=`<div class="flbl">Volume du piano guide</div><input type="range" min="0" max="100" value="${Math.round(SET.vol*100)}" oninput="setVol(this.value)" style="margin-bottom:10px">
+    ${tog('hp','J’utilise des écouteurs','Nécessaire pour le score : sans eux, le micro entend le piano.')}
+    ${tog('click','Clic de tempo')}${tog('tts','Consignes lues à voix haute')}
+    <div class="frow" style="margin-top:12px"><div><div class="flbl">Retard des écouteurs</div><select onchange="setSet('lat',+this.value)">${[[0,'Filaires · 0 ms'],[120,'Bluetooth · 120 ms'],[200,'Bluetooth · 200 ms'],[300,'Bluetooth · 300 ms']].map(([v,l])=>`<option value="${v}"${SET.lat===v?' selected':''}>${l}</option>`).join('')}</select></div>
+      <div><div class="flbl">Accordeur en direct</div><select onchange="setSet('live',this.value)">${[['auto','Auto (s’efface)'],['on','Toujours'],['off','Jamais']].map(([v,l])=>`<option value="${v}"${SET.live===v?' selected':''}>${l}</option>`).join('')}</select></div></div>
+    <div class="flbl">Micro utilisé</div><select id="mic-sel" onchange="setSet('micId',this.value)"><option value="">Par défaut</option></select>
+    <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:8px">Avec des écouteurs Bluetooth, choisis le micro du téléphone : celui des écouteurs dégrade le son. Si le score reste bas alors que tu chantes juste, augmente le retard.</div>`;
+  fillMics();}
+async function fillMics(){try{const ds=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audioinput'&&d.deviceId&&d.deviceId!=='default');const s=$('mic-sel');if(!s)return;
+  s.innerHTML=`<option value="">Par défaut</option>`+ds.map((d,i)=>`<option value="${esc(d.deviceId)}"${d.deviceId===SET.micId?' selected':''}>${esc(d.label||('Micro '+(i+1)))}</option>`).join('');}catch(e){}}
+function setSet(k,v){SET[k]=v;save();if(k==='micId'&&Mic.on){Mic.stop();Mic.start();}renderSettings();}
+function setVol(v){SET.vol=v/100;if(Aud.master)Aud.master.gain.value=SET.vol;save();}
+
+// ── Enregistrements ──
+let REC_URLS=[],RECDEL={id:0,t:0};
+async function renderRecs(){
+  const box=$('rec-list');if(!box)return;
+  try{const all=await REC.all();REC_URLS.forEach(u=>URL.revokeObjectURL(u));REC_URLS=[];
+    if(!all.length){box.textContent='Aucun enregistrement pour l’instant. Le premier sera ta référence.';return;}
+    box.innerHTML=all.slice().reverse().map(r=>{const u=URL.createObjectURL(r.blob);REC_URLS.push(u);const first=r.id===all[0].id,ext=/mp4|aac/.test(r.blob.type)?'m4a':/ogg/.test(r.blob.type)?'ogg':'webm';
+      return`<div class="rec-item"><div class="rec-top"><span style="color:var(--text)">${first?'⭐ Référence · ':''}${fmtD(r.date)} · semaine ${r.week||'—'}</span>
+        <span style="display:flex;gap:6px"><a class="btn-sm btn-sm-ghost mini" style="text-decoration:none;display:inline-flex;align-items:center" href="${u}" download="vocal-coach-${String(r.date).slice(0,10)}.${ext}">⬇</a>
+        <button class="btn-sm btn-sm-ghost mini" onclick="delRec(${r.id})">Suppr.</button></span></div>
+        <div style="font-size:11px;color:var(--t3)">${esc(r.song||'')}${r.dur?' · '+fmt(r.dur):''}</div><audio controls preload="none" src="${u}"></audio></div>`;}).join('');
+  }catch(e){box.textContent='Enregistrements indisponibles dans ce navigateur.';}
+}
+let RECT=null;
+async function toggleRec(){
+  const b=$('rec-btn');
+  if(REC.mr){clearInterval(RECT);await REC.stop(true);LASTREC=todayStr();save();showToast('Enregistrement sauvegardé ✓');rPrg();return;}
+  try{await REC.start();b.classList.remove('btn-gold');b.classList.add('btn-rec');
+    RECT=setInterval(()=>{const bb=$('rec-btn');if(bb)bb.textContent='■ Arrêter · '+fmt((Date.now()-REC.t0)/1000);},500);}
+  catch(e){showToast('Enregistrement impossible : autorise le micro');}
+}
+async function delRec(id){if(RECDEL.id!==id||Date.now()-RECDEL.t>3000){RECDEL={id,t:Date.now()};showToast('Touche encore « Suppr. » pour effacer cet enregistrement');return;}
+  try{await REC.del(id);}catch(e){}renderRecs();}
+
+function exportData(){const data={v:3,VOICE,VH,PROG,ST,SESSIONS,SONGS,CUR,PITCH,RATINGS,TEMPO,LASTREC,SET};
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data)],{type:'application/json'}));
+  a.download='vocal-coach-sauvegarde-'+todayStr()+'.json';document.body.appendChild(a);a.click();a.remove();LASTEXP=todayStr();save();}
+function importData(file){if(!file)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d.v!==3||typeof d.VOICE!=='object')throw 0;
+  VOICE={...VOICE_DEFAULT,...d.VOICE};VH=d.VH||[];PROG=d.PROG||null;ST=d.ST||ST;SESSIONS=d.SESSIONS||[];SONGS=d.SONGS||[];CUR=d.CUR||null;PITCH=d.PITCH||{};RATINGS=d.RATINGS||{};TEMPO=d.TEMPO||{};LASTREC=d.LASTREC||null;SET={...SET_DEFAULT,...(d.SET||{})};
+  save();closeOv();showToast('Sauvegarde restaurée ✓');sw(TAB);}catch(e){showToast('Fichier invalide (sauvegarde de cette version uniquement)');}};r.readAsText(file);}
+
+// ── TEST DE VOIX GUIDÉ ──────────────────────────
+const TSTEPS=[
+  {k:'setup'},
+  {k:'ref',t:'Ta voix parlée',d:'Téléphone à 30 cm, là où il sera pendant tes séances. Touche le bouton puis compte de 1 à 10 à voix normale. Ce niveau sert de repère à la jauge de volume.'},
+  {k:'low',t:'Ta note grave confortable',d:'Sur « a », descends lentement, note par note, jusqu’à la plus grave qui reste confortable et sonore. Tiens-la une seconde.',lo:33,hi:55,dir:-1},
+  {k:'chestMax',t:'Ta voix pleine, sans crier',d:'Sur « a », monte demi-ton par demi-ton depuis le médium. Arrête-toi à la dernière note avant que ça serre ou que ça crie. Tiens-la une seconde. Ne passe pas en falsetto.',lo:52,hi:74,dir:1},
+  {k:'passage',t:'Ton passage',d:'Fais une sirène lente sur « a », trois fois. Repère la note où le son change : il casse, s’amincit ou serre. Règle-la avec les boutons ; la ligne « Tu chantes » t’aide à la lire.',lo:55,hi:74,dir:0},
+  {k:'falsMax',t:'Ton falsetto le plus haut',d:'Sur « ou » léger, en falsetto, monte jusqu’à ta note la plus haute qui sort sans forcer. Tiens-la une seconde.',lo:60,hi:88,dir:1},
+  {k:'done'}
+];
+const TS={i:0,v:{},win:[],ref:null,refBuf:[],refT:null,first:false};
+function showTest(first){TS.i=0;TS.first=!!first;TS.ref=VOICE.refDb;
+  TS.v={low:n2m(VOICE.low),chestMax:n2m(VOICE.chestMax),passage:n2m(VOICE.passage),falsMax:n2m(VOICE.falsMax)};
+  $('ov').style.display='block';renderTest();}
+function closeTest(){clearInterval(TS.refT);Mic.onFrame=null;if(WK.state!=='running')Mic.stop();closeOv();}
+function renderTest(){const s=TSTEPS[TS.i],n=TSTEPS.length-2;TS.win=[];
+  const head=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><div class="brand">Test de voix${TS.i>0&&TS.i<=n?' · '+TS.i+'/'+n:''}</div>${TS.first&&!PROG?'':`<button class="btn-sm btn-sm-ghost" onclick="closeTest()">Fermer</button>`}</div>`;
+  const nav=`<div class="run-btns" style="margin-top:4px">${TS.i>0?`<button class="btn btn-ghost" style="flex:.6" onclick="testGo(-1)">← Retour</button>`:''}<button class="btn btn-gold" style="flex:1" onclick="testGo(1)">Suivant →</button></div>`;
+  let h=head;
+  if(s.k==='setup'){
+    h+=`<div class="card"><div class="ctitle">Avant de commencer</div><div style="font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:12px">10 minutes, au calme. Échauffe-toi d’abord avec une minute de sirènes douces à la paille. On cherche tes limites <b style="color:var(--text)">confortables</b> : ne force jamais.</div>
+      <div class="kv"><span>J’utilise des écouteurs pendant les séances</span><button class="btn-sm ${SET.hp?'btn-sm-gold':'btn-sm-ghost'} mini" onclick="SET.hp=!SET.hp;save();renderTest()">${SET.hp?'Oui':'Non'}</button></div>
+      <div class="kv"><span>Ils sont en Bluetooth</span><button class="btn-sm ${SET.lat?'btn-sm-gold':'btn-sm-ghost'} mini" onclick="SET.lat=SET.lat?0:200;save();renderTest()">${SET.lat?'Oui':'Non'}</button></div>
+      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:8px">Pour ce test, les écouteurs ne sont pas nécessaires. En séance, ils servent à ce que le micro n’entende que toi.</div></div>
+      <button class="btn btn-gold" onclick="testMic()">🎙️ Activer le micro et commencer</button>
+      <button class="link" style="margin-top:6px" onclick="testGo(1)">Continuer sans micro (réglage à la main)</button>`;
+  }else if(s.k==='ref'){
+    h+=`<div class="card"><div class="ctitle">${s.t}</div><div style="font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:14px">${s.d}</div>
+      <div class="t-live" id="t-ref">${TS.ref!=null?'✓ Niveau enregistré':Mic.on?'Prêt':'Micro inactif : étape ignorée'}</div>
+      ${Mic.on?`<button class="btn btn-ghost" id="ref-btn" onclick="testRef()">● Mesurer (6 secondes)</button>`:''}</div>${nav}`;
+  }else if(s.k==='done'){
+    const kv=(l,k)=>`<div class="kv"><span>${l}</span><b>${m2n(TS.v[k])} · ${m2s(TS.v[k])}</b></div>`;
+    h+=`<div class="card"><div class="ctitle">Tes résultats</div>${kv('Grave confortable','low')}${kv('Voix pleine max','chestMax')}${kv('Passage','passage')}${kv('Falsetto max','falsMax')}
+      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:8px">Tous les exercices et les tonalités conseillées de ton répertoire seront recalés sur ces notes. Les adaptations de hauteur repartent de zéro.</div></div>
+      <div class="run-btns"><button class="btn btn-ghost" style="flex:.6" onclick="testGo(-1)">← Retour</button><button class="btn btn-gold" style="flex:1" onclick="saveTest()">Enregistrer</button></div>`;
+  }else{
+    h+=`<div class="card"><div class="ctitle">${s.t}</div><div style="font-size:13px;color:var(--t2);line-height:1.65;margin-bottom:16px">${s.d}</div>
+      <div class="t-big" id="t-val">${m2n(TS.v[s.k])}</div><div class="t-solf" id="t-solf">${m2s(TS.v[s.k])}</div>
+      <div class="t-adj"><button class="btn-sm btn-sm-ghost" onclick="testAdj(-1)">− demi-ton</button><button class="btn-sm btn-sm-ghost" onclick="Aud.tone(TS.v[TSTEPS[TS.i].k])">🔊 Écouter</button><button class="btn-sm btn-sm-ghost" onclick="testAdj(1)">+ demi-ton</button></div>
+      <div class="t-live" id="t-live">${Mic.on?'Tu chantes : —':'Micro inactif : règle la note avec les boutons et « Écouter ».'}</div>
+      ${Mic.on&&s.dir?`<button class="btn btn-ghost" style="min-height:42px;padding:10px;font-size:12px" onclick="testReset()">↺ Recommencer la détection</button>`:''}</div>${nav}`;
+  }
+  $('ov-in').innerHTML=h;$('ov').scrollTop=0;
+  TS.det=null;Mic.onFrame=Mic.on?testFrame:null;
+}
+async function testMic(){const ok=await Mic.start();if(!ok)showToast('Micro inaccessible : autorise-le, ou continue à la main');testGo(1);}
+function testGo(d){clearInterval(TS.refT);TS.i=Math.max(0,Math.min(TSTEPS.length-1,TS.i+d));
+  if(TSTEPS[TS.i].k==='ref'&&!Mic.on)TS.i+=d>0?1:-1;
+  if(d>0&&TSTEPS[TS.i].k==='passage'&&TS.v.passage<=TS.v.chestMax-3)TS.v.passage=TS.v.chestMax+1;
+  renderTest();}
+function testAdj(d){const s=TSTEPS[TS.i];TS.v[s.k]=Math.max(s.lo,Math.min(s.hi,TS.v[s.k]+d));TS.det='manual';testShow();Aud.tone(TS.v[s.k],.9);}
+function testReset(){TS.det=null;TS.win=[];showToast('Détection relancée');}
+function testShow(){const s=TSTEPS[TS.i],a=$('t-val'),b=$('t-solf');if(a)a.textContent=m2n(TS.v[s.k]);if(b)b.textContent=m2s(TS.v[s.k]);}
+function testRef(){TS.refBuf=[];let left=6;const b=$('ref-btn'),l=$('t-ref');if(b)b.textContent='Compte à voix haute… 6';
+  clearInterval(TS.refT);TS.refT=setInterval(()=>{left--;const bb=$('ref-btn');if(left>0){if(bb)bb.textContent='Compte à voix haute… '+left;return;}
+    clearInterval(TS.refT);const v=TS.refBuf;TS.refBuf=null;
+    if(v&&v.length>=15){TS.ref=median(v);if(l)l.textContent='✓ Niveau enregistré';}else if(l)l.textContent='Pas assez de voix captée : rapproche le téléphone et recommence.';
+    if(bb)bb.textContent='● Mesurer à nouveau';},1000);}
+function testFrame(f){const s=TSTEPS[TS.i];if(!s)return;
+  if(s.k==='ref'){if(TS.refBuf&&f.raw!=null)TS.refBuf.push(f.db);return;}
+  const l=$('t-live');if(!l||!s.lo)return;
+  if(f.raw==null){TS.win=[];l.textContent='Tu chantes : —';return;}
+  l.textContent='Tu chantes : '+m2n(f.m)+' · '+m2s(f.m);
+  if(!s.dir||TS.det==='manual')return;
+  TS.win.push(f.raw);if(TS.win.length>10)TS.win.shift();
+  if(TS.win.length===10&&Math.max(...TS.win)-Math.min(...TS.win)<1){const c=Math.round(median(TS.win));
+    if(c>=s.lo&&c<=s.hi&&(TS.det==null||(s.dir>0?c>TS.det:c<TS.det))){TS.det=c;TS.v[s.k]=c;testShow();}}
+}
+function saveTest(){const v=TS.v;if(v.chestMax<=v.low+5||v.falsMax<=v.passage){showToast('Vérifie les notes : elles semblent incohérentes');return;}
+  VOICE={low:m2n(v.low),chestMax:m2n(v.chestMax),passage:m2n(v.passage),falsMax:m2n(v.falsMax),test:todayStr(),refDb:TS.ref};
+  VH.push({test:VOICE.test,low:VOICE.low,chestMax:VOICE.chestMax,passage:VOICE.passage,falsMax:VOICE.falsMax});VH=VH.slice(-20);
+  PITCH={};RATINGS={};TEMPO={};const first=!PROG;
+  if(first)PROG={phase:1,pw:1,sess:0,lastDate:null,repeats:0,cycle:1,started:new Date().toISOString()};
+  save();closeTest();showToast(first?'Programme démarré 🔥':'Repères mis à jour · exercices recalés ✓');sw(first?'auj':TAB);}
+function closeOv(){$('ov').style.display='none';}
+
+// ── JOURNAL ──────────────────────────────────────
+function rJnl(){
+  const el=$('page-jnl');
+  if(!SESSIONS.length){el.innerHTML=`<div class="rest"><div class="rest-icon">📖</div><div class="rest-title">Journal vide</div><div class="rest-sub">Termine ta première séance.</div></div>`;return;}
+  const last=SESSIONS.filter(s=>s.q).slice(0,10),n=f=>last.filter(s=>f(s.q||{})).length;
+  const tr=(l,v)=>{const p=last.length?Math.round(v/last.length*100):0;return`<div class="trend"><span>${l}</span><div class="trend-bar"><div style="width:${p}%"></div></div><b>${v}/${last.length}</b></div>`;};
+  const adapted=Object.keys(PITCH).filter(k=>PITCH[k]&&EX[k]);
+  el.innerHTML=`<div class="s3"><div class="scard"><div class="sv">${curStreak()}</div><div class="sl">Série</div></div>
+      <div class="scard"><div class="sv">${ST.total}</div><div class="sl">Séances</div></div>
+      <div class="scard"><div class="sv">${PROG?weekNum():0}</div><div class="sl">Semaine /26</div></div></div>
+    <div class="card"><div class="ctitle">Ressenti · ${last.length} dernières séances</div>
+      ${tr('Pomme d’Adam stable',n(q=>q.larynx==='stable'))}${tr('Passage lisse',n(q=>q.passage==='lisse'))}${tr('Volume resté doux',n(q=>q.volume==='doux'))}${tr('Voix normale après',n(q=>q.voice==='normale'))}</div>
+    ${adapted.length?`<div class="adapt">🎚️ Hauteurs adaptées : ${adapted.map(k=>EX[k].name+' '+(PITCH[k]>0?'+':'')+PITCH[k]).join(' · ')}</div>`:''}
+    <div class="card"><div class="ctitle">Séances récentes</div>
+    ${SESSIONS.slice(0,40).map(s=>{const q=s.q||{},a=sessAcc(s);const tags=[QL.larynx[q.larynx],QL.passage[q.passage],QL.voice[q.voice],a!=null?'Justesse '+Math.round(a)+' %':null].filter(Boolean).join(' · ');
+      return`<div class="jentry"><div class="jdot" style="background:${PH[s.phase]?.color||'var(--gold)'}"></div><div class="jinfo">
+        <div class="jtitle">${esc(s.title)}${s.counted?'':' <span style="font-size:10px;color:var(--t3)">(bonus)</span>'}</div>
+        <div class="jsub">Ph.${s.phase} · S${s.week} · ${s.mins||20} min${tags?' · '+tags:''}</div>
+        ${s.notes?`<div style="font-size:11px;color:var(--t3);margin-top:2px;font-style:italic">« ${esc(s.notes.substring(0,80))}${s.notes.length>80?'…':''} »</div>`:''}</div>
+        <div class="jdate">${fmtD(s.date)}</div></div>`;}).join('')}</div><div style="height:12px"></div>`;
+}
+
+// ── ACCUEIL ──────────────────────────────────────
+function showOB(){
+  $('ov-in').innerHTML=`<div class="ob-icon">🎤</div><div class="ob-title">Vocal Coach</div>
+    <div class="ob-sub">20 minutes par jour · 4 phases · 26 semaines.<br>Objectif : une voix stable, ronde dans le mix et l’aigu, qui tient longtemps.</div>
+    <div class="card"><div class="ctitle">Comment ça marche</div><div style="font-size:13px;color:var(--t2);line-height:1.7">
+      ① On commence par un test de voix guidé : tous les exercices sont calés dessus.<br>② Une séance par jour, 20 minutes maximum. Tu avances d’une semaine toutes les 6 séances.<br>③ Avec des écouteurs, le micro mesure ta justesse, ta stabilité et ton volume.<br>④ Avant et après chaque séance, quelques réponses adaptent la suite.<br>⑤ Une phase ne se termine que si ta voix est prête.</div></div>
+    <button class="btn btn-gold" onclick="showTest(true)">Commencer par le test de voix</button>
+    <button class="link" style="margin-top:8px" onclick="$('imp').click()">Restaurer une sauvegarde</button>`;
+  $('ov').style.display='block';
+}
+function showToast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(showToast.t);showToast.t=setTimeout(()=>t.classList.remove('show'),2800);}
+
+// ── INIT ─────────────────────────────────────────
+load();checkGap();updStreak();
+if(!PROG)showOB();
+sw('auj');
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&WK.state==='running'){wake(true);WK.tick();}});
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
+try{if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js').catch(()=>{});}catch(e){}
+</script>
+</body>
+</html>
